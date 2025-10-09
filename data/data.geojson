@@ -1963,7 +1963,9 @@
         "id": "N022",
         "name": "Ilôt Jean Macé",
         "description": "Lieu d'affluence",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/FFCxBqrG/N022.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,
@@ -4387,7 +4389,9 @@
         "id": "N044",
         "name": "Chemin d'usage ",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/y6pTb51T/N044.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": true,
@@ -4563,7 +4567,9 @@
         "id": "N047",
         "name": "Assise rebord dalle Thorez",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/QNYqyP8Q/N047.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,
@@ -6313,7 +6319,9 @@
         "id": "N072",
         "name": "Résidentialisation Rue Condorcet",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/Kcp5HVGN/N072.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,

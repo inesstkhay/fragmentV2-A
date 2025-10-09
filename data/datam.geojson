@@ -436,15 +436,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.406497613730238,
-          43.57157419604789
+          1.4058336581169897,
+          43.57154549459332
         ]
       },
       "properties": {
         "id": "M008",
-        "name": "Squat Messager (a documenter)",
+        "name": "Squat Messager 2",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/xTpwft97/M008.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,
@@ -1104,7 +1106,9 @@
         "id": "M019",
         "name": "Portes peintes: Gluck",
         "description": "\"Ici, on peut loger une famille\" sur les portes condamnées du tripode Gluck, étudiants en art et collectif d'habitants",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/4N3CRrRD/M019.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,
@@ -1284,8 +1288,8 @@
       },
       "properties": {
         "id": "M024",
-        "name": "Épicerie solidaire: Varèse",
-        "description": "-",
+        "name": "Épicerie solidaire La Manne",
+        "description": "RDC du Petit Varèse",
         "photos": [],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": true,
@@ -1422,7 +1426,9 @@
         "id": "M027",
         "name": "Lieu de street workout: Lac ",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/ncL8f6f5/M027.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": true,
@@ -4350,7 +4356,9 @@
         "id": "M085",
         "name": "Squat: Dalle Jean Gilles 1",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/vH2JY3GN/M085.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": true,
         "frequence_usage_regulier": false,
@@ -4998,7 +5006,9 @@
         "id": "M097",
         "name": "Chateau de La Reynerie ",
         "description": "Lieu patrimonial institutionnel",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/VLNyP3Pt/M097.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": true,
         "frequence_usage_regulier": false,
@@ -5190,7 +5200,9 @@
         "id": "M100",
         "name": "Intensité usage: Parking Basso Cambo",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/sD2FCtCY/M100.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,
@@ -6742,7 +6754,9 @@
         "id": "M132",
         "name": "Résidentialisation: Basso Cambo ",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/RV0rxjxG/M132.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,
@@ -7242,7 +7256,9 @@
         "id": "M141",
         "name": "Incendies à Messager",
         "description": "-",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/L4Dd7mwf/M141.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": true,
         "frequence_usage_regulier": false,
@@ -7424,7 +7440,9 @@
         "id": "M146",
         "name": "Dalle coupée - Clairefontaine",
         "description": "Tracé de l'ancienne dalle",
-        "photos": [],
+        "photos": [
+          "https://i.postimg.cc/zX2sz0JJ/M146.jpg"
+        ],
         "frequence_usage_aucun": false,
         "frequence_usage_ponctuel": false,
         "frequence_usage_regulier": false,
