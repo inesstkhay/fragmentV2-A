@@ -21,7 +21,6 @@ const toulouseView  = [43.5675824, 1.4000176];
 const toulouseZoom  = 15;
 let currentLocation = 'montreuil';         // localisation initiale
 let patternsVersion = 0;                   // (NOTE: compteur; non utilisé ailleurs)
-let patternThreshold = 5;                  // nb de critères communs pour former un pattern
 
 // Références DOM fréquentes
 const proxemicView  = document.getElementById('proxemic-view');
@@ -125,17 +124,6 @@ function ensureImgObserver() {
   }, { rootMargin: '800px 0px', threshold: 0.01 }); // précharge ~800px avant
   return __imgObserver;
 }
-
-
-
-
-
-
-/*---------------------------------------
-  CARTE PRINCIPALE (Fragments)
-  (déjà initialisée ci-dessus)
----------------------------------------*/
-
 
 
 /*---------------------------------------
@@ -273,15 +261,6 @@ document.querySelectorAll('.filter-zone').forEach(cb => {
   cb.addEventListener('change', () => {
     applyFilters();
 
-    if (currentView === 'proxemic' || currentView === 'gallery') {
-      const visibleFeatures = allLayers.filter(layer => map.hasLayer(layer)).map(layer => layer.feature);
-      patterns = identifyPatterns(visibleFeatures);
-      if (currentView === 'gallery')      showGalleryView();
-      else if (currentView === 'proxemic') showProxemicView();
-    } else if (currentView === 'critical') {
-      showCriticalView(); // (Partie 2)
-    }
-
     if (currentView === 'patterns-map') {
       renderPatternBaseGrey(); // (Partie 2)
       const visible = [...dataGeojson, ...datamGeojson].filter(f => isFeatureInActiveZones(f) && !f.properties.isDiscourse);
@@ -297,157 +276,202 @@ document.querySelectorAll('.filter-zone').forEach(cb => {
 ---------------------------------------*/
 let patternCounter = 1; // (NOTE: non utilisé directement ici; conservé)
 
-const CRITERIA_KEYS = [
-  "frequence_usage_aucun", "frequence_usage_ponctuel", "frequence_usage_regulier", "frequence_usage_quotidien",
-  "mode_usage_prevu", "mode_usage_detourne", "mode_usage_creatif",
-  "intensite_usage_aucun", "intensite_usage_faible", "intensite_usage_moyenne", "intensite_usage_forte",
-  "echelle_micro", "echelle_meso", "echelle_macro",
-  "origine_forme_institutionnelle", "origine_forme_singuliere", "origine_forme_collective",
-  "accessibilite_libre", "accessibilite_semi_ouverte", "accessibilite_fermee",
-  "visibilite_cachee", "visibilite_visible", "visibilite_exposee",
-  "acteurs_visibles_habitant", "acteurs_visibles_institution", "acteurs_visibles_collectif", "acteurs_visibles_invisible",
-  "rapport_affectif_symbolique"
+/***************************************************
+ * 1) LISTE DES CLÉS FUZZY (dans l’ordre fixe)
+ ***************************************************/
+const ALL_FUZZY_KEYS = [
+  // Pratiques actives
+  "PA_P1_intensitesoin",
+  "PA_P1_frequencegestes",
+  "PA_P1_degrecooperation",
+
+  "PA_P2_degretransformation",
+  "PA_P2_perrenite",
+  "PA_P2_autonomie",
+
+  "PA_P3_intensiteusage",
+  "PA_P3_frequenceusage",
+  "PA_P3_diversitepublic",
+  "PA_P3_conflitusage",
+
+  // Dynamiques hybrides
+  "DH_P1_degreinformalite",
+  "DH_P1_echellepratique",
+  "DH_P1_degremutualisation",
+
+  "DH_P2_degréorganisation",
+  "DH_P2_porteepolitique",
+  "DH_P2_effetspatial",
+
+  "DH_P3_attachement",
+
+  "DH_P4_intensiteflux",
+
+  // Forces structurantes
+  "FS_P1_presenceinstitutionnelle",
+  "FS_P1_intensitecontrole",
+  "FS_P2_abandon",
+  "FS_P3_pressionfoncière"
 ];
 
-const MASK_BY_ID = new Map();
+let ACTIVE_FUZZY_KEYS = new Set(ALL_FUZZY_KEYS); // par défaut : tout est actif
 
-function buildMaskFor(feature) {
-  const id = feature.properties.id;
-  if (MASK_BY_ID.has(id)) return MASK_BY_ID.get(id);
-  let mask = 0;
-  CRITERIA_KEYS.forEach((key, idx) => { if (feature.properties[key] === true) mask |= (1 << idx); });
-  MASK_BY_ID.set(id, mask);
-  return mask;
+
+
+/***************************************************
+ * 2) PARSEUR FUZZY
+ ***************************************************/
+function parseFuzzy(v) {
+  if (v === "-" || v === "" || v === null || v === undefined) return null;
+  return parseFloat(String(v).replace(",", "."));
 }
 
-function popcount32(x) {
-  x = x - ((x >>> 1) & 0x55555555);
-  x = (x & 0x33333333) + ((x >>> 2) & 0x33333333);
-  return (((x + (x >>> 4)) & 0x0F0F0F0F) * 0x01010101) >>> 24;
-}
+/***************************************************
+ * 3) CONVERTIR UN FRAGMENT EN VECTEUR FUZZY
+ ***************************************************/
+function featureToVector(feature) {
+  const props = feature.properties;
 
-function maskToCriteriaDict(mask) {
-  const o = {};
-  CRITERIA_KEYS.forEach((key, idx) => { if (mask & (1 << idx)) o[key] = true; });
-  return o;
-}
-
-function criteriaDictToMask(dict) {
-  let mask = 0;
-  CRITERIA_KEYS.forEach((key, idx) => { if (dict && dict[key]) mask |= (1 << idx); });
-  return mask;
-}
-
-function diffCriteria(patternMask, fragMask) {
-  const shared    = patternMask & fragMask;     // communs
-  const different = fragMask   & ~patternMask;  // dans fragment mais pas pattern
-  return { shared, different };
-}
-
-function badgesFromMask(mask, className) {
-  const frag = document.createDocumentFragment();
-  let hasAny = false;
-  CRITERIA_KEYS.forEach((key, idx) => {
-    if (mask & (1 << idx)) {
-      hasAny = true;
-      const span = document.createElement('span');
-      span.className = `crit-badge ${className}`;
-      span.textContent = key.replace(/_/g, ' ');
-      frag.appendChild(span);
-    }
+  return ALL_FUZZY_KEYS.map(k => {
+    if (!ACTIVE_FUZZY_KEYS.has(k)) return null; // critère désactivé
+    return parseFuzzy(props[k]);
   });
-  if (!hasAny) {
-    const span = document.createElement('span');
-    span.className = 'crit-empty';
-    span.textContent = '—';
-    frag.appendChild(span);
+}
+
+
+/***************************************************
+ * 4) SIMILARITÉ FUZZY
+ * Retourne un score entre 0 et 1
+ ***************************************************/
+function similarityFuzzy(vec1, vec2) {
+  let sum = 0;
+  let count = 0;
+
+  for (let i = 0; i < vec1.length; i++) {
+    const a = vec1[i];
+    const b = vec2[i];
+
+    // aucun renseignement → on ignore ce critère
+    if (a === null && b === null) continue;
+
+    let dist;
+    if (a === null || b === null) {
+      dist = 1; // absence = pénalité max
+    } else {
+      dist = Math.abs(a - b);
+    }
+
+    sum += dist;
+    count++;
   }
-  return frag;
+
+  if (count === 0) return 0; // aucun critère exploitable
+
+  const avgDist = sum / count;
+  return 1 - avgDist;
 }
 
+/***************************************************
+ * 5) IDENTIFICATION DES PATTERNS FUZZY
+ ***************************************************/
+let SIM_THRESHOLD = 0.75;
 
-/*---------------------------------------
-  9-bis) DIMENSIONS ACTIVABLES (UI → masque)
----------------------------------------*/
+function identifyPatterns(features) {
+  const vecs = features.map(f => ({
+    id: f.properties.id,
+    f,
+    vec: featureToVector(f)
+  }));
 
-// 1) Définir quelles clés appartiennent à chaque dimension
-const DIM_TO_KEYS = {
-  frequence_usage: [
-    "frequence_usage_ponctuel", "frequence_usage_regulier", "frequence_usage_quotidien"
-  ],
-  mode_usage: [
-    "mode_usage_prevu", "mode_usage_detourne", "mode_usage_creatif"
-  ],
-  intensite_usage: [
-    // on ne met PAS "intensite_usage_aucun" (clé technique éventuelle)
-    "intensite_usage_faible", "intensite_usage_moyenne", "intensite_usage_forte"
-  ],
-  echelle: [
-    "echelle_micro", "echelle_meso", "echelle_macro"
-  ],
-  origine_forme: [
-    "origine_forme_institutionnelle", "origine_forme_singuliere", "origine_forme_collective"
-  ],
-  accessibilite: [
-    "accessibilite_libre", "accessibilite_semi_ouverte", "accessibilite_fermee"
-  ],
-  visibilite: [
-    "visibilite_cachee", "visibilite_visible", "visibilite_exposee"
-  ],
-  acteurs_visibles: [
-    "acteurs_visibles_habitant", "acteurs_visibles_institution",
-    "acteurs_visibles_collectif", "acteurs_visibles_invisible"
-  ],
-  rapport_affectif_symbolique: [
-    "rapport_affectif_symbolique"
-  ]
-};
+  const used = new Set();
+  const groups = [];
+  let index = 1;
 
-// 2) Pré-calcul : bitmask par dimension (pour aller vite)
-const DIM_MASK = {};
-Object.entries(DIM_TO_KEYS).forEach(([dim, keys]) => {
-  let m = 0;
-  keys.forEach(k => {
-    const idx = CRITERIA_KEYS.indexOf(k);
-    if (idx >= 0) m |= (1 << idx);
-  });
-  DIM_MASK[dim] = m;
-});
+  for (let i = 0; i < vecs.length; i++) {
+    if (used.has(vecs[i].id)) continue;
 
-// 3) Par défaut : toutes les dimensions sont actives ⇒ masque = union de toutes
-let criteriaEnabledMask = Object.values(DIM_MASK).reduce((acc, m) => acc | m, 0);
+    for (let j = i + 1; j < vecs.length; j++) {
+      if (used.has(vecs[j].id)) continue;
 
-// 4) Base mask (par fragment) calculé une seule fois, puis "fenêtré" par le masque actif
-const BASE_MASK_BY_ID = new Map();
-function buildBaseMaskFor(feature) {
-  const id = feature.properties.id;
-  if (BASE_MASK_BY_ID.has(id)) return BASE_MASK_BY_ID.get(id);
-  let mask = 0;
-  CRITERIA_KEYS.forEach((key, idx) => { if (feature.properties[key] === true) mask |= (1 << idx); });
-  BASE_MASK_BY_ID.set(id, mask);
-  return mask;
-}
+      const sim = similarityFuzzy(vecs[i].vec, vecs[j].vec);
+      if (sim < SIM_THRESHOLD) continue;
 
-// ⇨ remplacer l’ancien buildMaskFor(...) par cette fonction d’accès
-function getActiveMaskFor(feature) {
-  const base = buildBaseMaskFor(feature);
-  return (base & criteriaEnabledMask);
-}
+      // Nouveau pattern
+      const group = {
+        name: `P${index++}`,
+        elements: [vecs[i].id, vecs[j].id],
+        coreSimilarity: sim
+      };
 
+      // Extension possible
+      for (let k = 0; k < vecs.length; k++) {
+        const idk = vecs[k].id;
+        if (group.elements.includes(idk)) continue;
 
+        const simk = similarityFuzzy(vecs[i].vec, vecs[k].vec);
+        if (simk >= SIM_THRESHOLD) group.elements.push(idk);
+      }
 
-/*---------------------------------------
-  9-ter) LISTENERS UI des dimensions
----------------------------------------*/
-function rebuildCriteriaEnabledMaskFromUI() {
-  let m = 0;
-  document.querySelectorAll('#criteria-legend .crit-dim').forEach(cb => {
-    const dim = cb.getAttribute('data-dim');
-    if (cb.checked && DIM_MASK[dim] !== undefined) {
-      m |= DIM_MASK[dim];
+      group.elements.forEach(id => used.add(id));
+      groups.push(group);
     }
+  }
+
+  // Format final : dictionnaire
+  const result = {};
+  groups.forEach(g => {
+    result[g.name] = g;
   });
-  criteriaEnabledMask = m;
+  return result;
+}
+
+/***************************************************
+ * 6) SIGNATURE FUZZY D’UN FRAGMENT
+ ***************************************************/
+function fuzzySignature(vec) {
+  let sum = 0;
+  let count = 0;
+
+  for (const v of vec) {
+    if (v === null) continue;
+    sum += v;
+    count++;
+  }
+
+  if (count === 0) return 0;
+  return sum / count;
+}
+
+/***************************************************
+ * 8) AFFICHAGE DES CRITÈRES DANS LES PANELS
+ ***************************************************/
+function renderFuzzyCriteria(panel, feature) {
+  const props = feature.properties;
+
+  const container = document.createElement('div');
+  container.className = "fuzzy-criteria";
+
+  ALL_FUZZY_KEYS.forEach(k => {
+    const raw = props[k];
+    const val = parseFuzzy(raw);
+
+    const line = document.createElement('div');
+    line.className = 'crit-line';
+
+    const label = document.createElement('span');
+    label.className = 'crit-label';
+    label.textContent = k;
+
+    const value = document.createElement('span');
+    value.className = 'crit-value';
+    value.textContent = (val !== null ? val : "—");
+
+    line.appendChild(label);
+    line.appendChild(value);
+    container.appendChild(line);
+  });
+
+  panel.appendChild(container);
 }
 
 function recomputePatternsAndRefreshViews() {
@@ -458,73 +482,8 @@ function recomputePatternsAndRefreshViews() {
 
   patterns = identifyPatterns(visible);
 
-  // Rafraîchit la vue courante
-  if (currentView === 'gallery')        showGalleryView();
-  else if (currentView === 'proxemic')  showProxemicView();
-  else if (currentView === 'patterns-map') { renderPatternBaseGrey(); refreshPatternsMap(); }
+
 }
-
-function hookLegendCheckboxes() {
-  document.querySelectorAll('#criteria-legend .crit-dim').forEach(cb => {
-    cb.addEventListener('change', () => {
-      rebuildCriteriaEnabledMaskFromUI();
-      recomputePatternsAndRefreshViews();
-    });
-  });
-}
-
-// Quand le DOM est prêt, on accroche les listeners
-document.addEventListener('DOMContentLoaded', () => {
-  hookLegendCheckboxes();
-  rebuildCriteriaEnabledMaskFromUI(); // init (tout coché)
-});
-
-
-
-
-/*---------------------------------------
- 10) DÉTECTION DES PATTERNS (similarité)
----------------------------------------*/
-function identifyPatterns(features) {
-  const used = new Set();
-  const groups = [];
-  let groupIndex = 1;
-
-  for (let i = 0; i < features.length; i++) {
-    const f1 = features[i], id1 = f1.properties.id;
-    if (used.has(id1)) continue;
-    const m1 = getActiveMaskFor(f1);
-
-    for (let j = i + 1; j < features.length; j++) {
-      const f2 = features[j], id2 = f2.properties.id;
-      if (used.has(id2)) continue;
-      const m2 = getActiveMaskFor(f2);
-
-      const sharedMask  = (m1 & m2);
-      const sharedCount = popcount32(sharedMask);
-      if (sharedCount !== patternThreshold) continue;
-
-      const group = { name: `P${groupIndex++}`, elements: [id1, id2], criteria: maskToCriteriaDict(sharedMask) };
-
-      // Ajoute tous les f_k qui incluent strictement ces critères partagés
-      for (let k = 0; k < features.length; k++) {
-        const f3 = features[k], id3 = f3.properties.id;
-        if (group.elements.includes(id3)) continue;
-        const m3 = buildMaskFor(f3);
-        if ((m3 & sharedMask) === sharedMask) group.elements.push(id3);
-      }
-
-      group.elements.forEach(id => used.add(id));
-      groups.push(group);
-    }
-  }
-
-  const result = {};
-  patternNames = {};
-  groups.forEach(g => { result[g.name] = g; patternNames[g.name] = g.name; });
-  return result;
-}
-
 
 /*---------------------------------------
  11) CHARGEMENT DES DONNÉES GEOJSON
@@ -699,22 +658,37 @@ function makePanelContainer(id) {
 
 function openTab({ id, title, kind, render }) {
   ensureTabbedSidebar();
-  if (Tabbed.openTabs.has(id)) { focusTab(id); return; }
 
+  // Si onglet déjà ouvert → focus et sortir
+  if (Tabbed.openTabs.has(id)) {
+    focusTab(id);
+    Tabbed.content.scrollTop = 0;
+    return;
+  }
+
+  // Bouton onglet
   const btn   = makeTabButton(title, id);
+  // Contenu
   const panel = makePanelContainer(id);
 
-  // ➜ D'abord attacher au DOM
+  // Injection dans le DOM
   Tabbed.tabsBar.appendChild(btn);
   Tabbed.content.appendChild(panel);
 
-  // ➜ Ensuite rendre le contenu (les IDs existent dans le document)
+  // Rendu
   render(panel);
 
+  // Enregistrement
   Tabbed.openTabs.set(id, { btn, panel, kind });
+
+  // Afficher la sidebar si cachée
   showTabbedSidebar();
+
+  // Focus sur l’onglet
   focusTab(id);
+  Tabbed.content.scrollTop = 0;
 }
+
 
 
 
@@ -734,16 +708,29 @@ function saveFragmentMeta(fragmentId, meta) {
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
 
-/*==================================================
-=                PANNEAU FRAGMENT                  =
-==================================================*/
+/***************************************************
+=                PANNEAU FRAGMENT (Fuzzy + Usages) =
+***************************************************/
 function renderFragmentPanel(panel, props) {
   panel.innerHTML = '';
 
   const fragId = props.id || '—';
-  const h2 = document.createElement('h2'); h2.textContent = props.name || fragId || 'Fragment';
-  const pId = document.createElement('p'); pId.innerHTML = `<strong>ID :</strong> ${fragId}`;
-  const pDesc = document.createElement('p'); pDesc.textContent = props.description || '';
+
+  /* ------------------------------
+     En-tête du fragment
+  ------------------------------ */
+  const h2 = document.createElement('h2');
+  h2.textContent = props.name || fragId || 'Fragment';
+
+  const pId = document.createElement('p');
+  pId.innerHTML = `<strong>ID :</strong> ${fragId}`;
+
+  const pDesc = document.createElement('p');
+  pDesc.textContent = props.description || '';
+
+  /* ------------------------------
+     Photos
+  ------------------------------ */
   const photos = document.createElement('div');
   const photoList = normalizePhotos(props.photos);
   if (photoList.length) {
@@ -756,16 +743,21 @@ function renderFragmentPanel(panel, props) {
       }
     });
   }
+
   panel.append(h2, pId, pDesc, photos);
 
-  // Actions 3D
+  /* ------------------------------
+     Boutons 3D
+  ------------------------------ */
   const actions = document.createElement('div');
   actions.className = 'btn-row';
+
   const btnOpen3D = document.createElement('button');
   btnOpen3D.className = 'tab-btn btn-sm primary';
   btnOpen3D.textContent = hasFragment3D(fragId) ? 'Voir la 3D' : 'Importer 3D';
   btnOpen3D.addEventListener('click', () => openThreeModalForFragment(fragId));
   actions.append(btnOpen3D);
+
   if (hasFragment3D(fragId)) {
     const btnImport3D = document.createElement('button');
     btnImport3D.className = 'tab-btn btn-sm';
@@ -773,144 +765,347 @@ function renderFragmentPanel(panel, props) {
     btnImport3D.addEventListener('click', () => promptImport3DForFragment(fragId, true));
     actions.append(btnImport3D);
   }
+
   panel.append(actions);
 
-  // Blocs Usages / Discours
-  const meta = loadFragmentMeta(fragId);
-  function makeEditorBlock(title, listKey, placeholder) {
-    const box = document.createElement('div'); box.className = 'meta-box';
-    const head = document.createElement('div'); head.className = 'meta-head'; head.innerHTML = `<strong>${title}</strong>`;
-    box.appendChild(head);
-    const addRow = document.createElement('div'); addRow.className = 'meta-add-row';
-    const ta = document.createElement('textarea'); ta.className = 'meta-ta'; ta.rows = 3; ta.placeholder = placeholder;
-    const addBtn = document.createElement('button'); addBtn.className = 'tab-btn btn-sm'; addBtn.textContent = 'Ajouter';
-    addBtn.addEventListener('click', () => {
-      const txt = ta.value.trim(); if (!txt) return;
-      meta[listKey].push({ id: uid(), text: txt });
-      saveFragmentMeta(fragId, meta); ta.value = ''; renderList();
+  /* ======================================================
+     1) USAGES issus du GeoJSON (parser la string en liste)
+     ====================================================== */
+  const existingUsages = [];
+  if (props.usages && typeof props.usages === "string") {
+    props.usages.split(/[;,]/).forEach(u => {
+      const trimmed = u.trim();
+      if (trimmed && trimmed !== "-") existingUsages.push(trimmed);
     });
-    addRow.append(ta, addBtn); box.appendChild(addRow);
-    const list = document.createElement('div'); list.className = 'meta-list'; box.appendChild(list);
+  }
+
+  const blockExisting = document.createElement('div');
+  blockExisting.className = 'meta-box';
+
+  const headExist = document.createElement('div');
+  headExist.className = 'meta-head';
+  headExist.innerHTML = `<strong>Usages issus du terrain</strong>`;
+  blockExisting.appendChild(headExist);
+
+  const listExist = document.createElement('div');
+  listExist.className = 'meta-list';
+
+  if (existingUsages.length) {
+    existingUsages.forEach(u => {
+      const row = document.createElement('div');
+      row.className = 'meta-item';
+      row.innerHTML = `<div class="meta-item-text">${u}</div>`;
+      listExist.appendChild(row);
+    });
+  } else {
+    const empty = document.createElement('div');
+    empty.className = 'meta-empty';
+    empty.textContent = "— Aucun usage renseigné dans le GeoJSON.";
+    listExist.appendChild(empty);
+  }
+
+  blockExisting.appendChild(listExist);
+  panel.append(blockExisting);
+
+  /* ======================================================
+     2) USAGES ajoutés localement par l’utilisateur
+     ====================================================== */
+  const meta = loadFragmentMeta(fragId);
+
+  function makeEditorBlock(title, listKey, placeholder) {
+    const box = document.createElement('div');
+    box.className = 'meta-box';
+
+    const head = document.createElement('div');
+    head.className = 'meta-head';
+    head.innerHTML = `<strong>${title}</strong>`;
+    box.appendChild(head);
+
+    const addRow = document.createElement('div');
+    addRow.className = 'meta-add-row';
+
+    const ta = document.createElement('textarea');
+    ta.className = 'meta-ta';
+    ta.rows = 3;
+    ta.placeholder = placeholder;
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'tab-btn btn-sm';
+    addBtn.textContent = 'Ajouter';
+
+    addBtn.addEventListener('click', () => {
+      const txt = ta.value.trim();
+      if (!txt) return;
+      meta[listKey].push({ id: uid(), text: txt });
+      saveFragmentMeta(fragId, meta);
+      ta.value = '';
+      renderList();
+    });
+
+    addRow.append(ta, addBtn);
+    box.appendChild(addRow);
+
+    const list = document.createElement('div');
+    list.className = 'meta-list';
+    box.appendChild(list);
 
     function renderList() {
       list.innerHTML = '';
       meta[listKey].forEach(item => {
-        const row = document.createElement('div'); row.className = 'meta-item';
-        const left = document.createElement('div'); left.className = 'meta-item-left';
-        const txt = document.createElement('div'); txt.className = 'meta-item-text'; txt.textContent = item.text; txt.title = 'Cliquer pour éditer';
+        const row = document.createElement('div');
+        row.className = 'meta-item';
+
+        const left = document.createElement('div');
+        left.className = 'meta-item-left';
+
+        const txt = document.createElement('div');
+        txt.className = 'meta-item-text';
+        txt.textContent = item.text;
+        txt.title = 'Cliquer pour éditer';
+
+        // Édition
         txt.addEventListener('click', () => {
           if (row.querySelector('textarea')) return;
-          const editor = document.createElement('textarea'); editor.className = 'meta-edit'; editor.value = item.text; editor.rows = Math.max(2, Math.ceil(item.text.length / 60));
-          const saveBtn = document.createElement('button'); saveBtn.className = 'tab-btn btn-xs primary'; saveBtn.textContent = 'OK';
-          const cancelBtn = document.createElement('button'); cancelBtn.className = 'tab-btn btn-xs'; cancelBtn.textContent = 'Annuler';
-          const editRow = document.createElement('div'); editRow.className = 'meta-edit-row'; editRow.append(editor, saveBtn, cancelBtn);
+          const editor = document.createElement('textarea');
+          editor.className = 'meta-edit';
+          editor.value = item.text;
+
+          const saveBtn = document.createElement('button');
+          saveBtn.className = 'tab-btn btn-xs primary';
+          saveBtn.textContent = 'OK';
+
+          const cancelBtn = document.createElement('button');
+          cancelBtn.className = 'tab-btn btn-xs';
+          cancelBtn.textContent = 'Annuler';
+
+          const editRow = document.createElement('div');
+          editRow.className = 'meta-edit-row';
+          editRow.append(editor, saveBtn, cancelBtn);
+
           left.replaceChild(editRow, txt);
+
           saveBtn.addEventListener('click', () => {
-            const newTxt = editor.value.trim(); if (newTxt) { item.text = newTxt; saveFragmentMeta(fragId, meta); }
+            const newTxt = editor.value.trim();
+            if (newTxt) {
+              item.text = newTxt;
+              saveFragmentMeta(fragId, meta);
+            }
             renderList();
           });
+
           cancelBtn.addEventListener('click', renderList);
         });
+
         left.appendChild(txt);
-        const right = document.createElement('div'); right.className = 'meta-item-right';
-        const delBtn = document.createElement('button'); delBtn.className = 'tab-btn btn-xs danger'; delBtn.textContent = 'Suppr.'; delBtn.title = 'Supprimer';
+
+        const right = document.createElement('div');
+        right.className = 'meta-item-right';
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'tab-btn btn-xs danger';
+        delBtn.textContent = 'Suppr.';
+
         delBtn.addEventListener('click', () => {
           meta[listKey] = meta[listKey].filter(x => x.id !== item.id);
           saveFragmentMeta(fragId, meta);
           renderList();
         });
+
         right.appendChild(delBtn);
+
         row.append(left, right);
         list.appendChild(row);
       });
+
       if (!meta[listKey].length) {
-        const empty = document.createElement('div'); empty.className = 'meta-empty'; empty.textContent = '— Aucun élément pour le moment.';
+        const empty = document.createElement('div');
+        empty.className = 'meta-empty';
+        empty.textContent = '— Aucun élément pour le moment.';
         list.appendChild(empty);
       }
     }
+
     renderList();
     return box;
   }
-  const usagesBlock   = makeEditorBlock('Usages',   'usages',   'Ex : « Lieu de réunion… »');
+
+  const usagesBlock = makeEditorBlock('Usages ajoutés', 'usages', 'Ex : « Lieu de réunion… »');
   const discoursBlock = makeEditorBlock('Discours', 'discours', 'Ex : « L’institution prévoit… »');
+
   panel.append(usagesBlock, discoursBlock);
+
+  /* ======================================================
+     3) CRITÈRES FUZZY
+     ====================================================== */
+  const fuzzyBlock = document.createElement('div');
+  fuzzyBlock.className = 'fuzzy-criteria';
+
+  const hFuzzy = document.createElement('h3');
+  hFuzzy.textContent = "Critères";
+  fuzzyBlock.appendChild(hFuzzy);
+
+  ALL_FUZZY_KEYS.forEach(k => {
+    const raw = props[k];
+    const val = parseFuzzy(raw);
+
+    const row = document.createElement('div');
+    row.className = 'crit-line';
+
+    const label = document.createElement('span');
+    label.className = 'crit-label';
+    label.textContent = k;
+
+    const value = document.createElement('span');
+    value.className = 'crit-value';
+    value.textContent = (val !== null ? val : "—");
+
+    row.append(label, value);
+    fuzzyBlock.appendChild(row);
+  });
+
+  panel.append(fuzzyBlock);
 }
 
 
-/*==================================================
-=                PANNEAU PATTERN                   =
-==================================================*/
+/***************************************************
+=        PANNEAU PATTERN     =
+***************************************************/
 function renderPatternPanel(panel, patternKey, patternData) {
   panel.innerHTML = '';
 
+  const ids = patternData.elements || [];
+  const all = [...(dataGeojson || []), ...(datamGeojson || [])];
+  const byId = new Map(all.map(f => [f.properties.id, f]));
+
+  /* --------------------------------------------
+     1) Titre
+  -------------------------------------------- */
   const h2 = document.createElement('h2');
   h2.textContent = `${patternKey} — Pattern`;
+  panel.appendChild(h2);
 
-  const crits = Object.keys(patternData.criteria || {})
-    .map(c => c.replace(/_/g, ' '))
-    .join(', ');
-  const pCrit = document.createElement('p');
-  pCrit.innerHTML = `<strong>Critères communs du pattern :</strong> ${crits || '—'}`;
+  /* --------------------------------------------
+     2) Similarité moyenne globale
+  -------------------------------------------- */
+  const vecs = ids.map(id => featureToVector(byId.get(id)));
+  let simSum = 0, simCount = 0;
 
-  const legend = document.createElement('div');
-  legend.className = 'crit-legend';
-  legend.innerHTML = `
-    <span class="crit-badge badge-shared">partagés</span>
-    <span class="crit-badge badge-different">différents</span>
-  `;
+  for (let i = 0; i < vecs.length; i++) {
+    for (let j = i + 1; j < vecs.length; j++) {
+      simSum += similarityFuzzy(vecs[i], vecs[j]);
+      simCount++;
+    }
+  }
 
-  // ✅ créer les actions AVANT de faire panel.append(...)
-  const actions = document.createElement('div');
-  actions.className = 'btn-row';
-  const btnSavePattern = document.createElement('button');
-  btnSavePattern.className = 'tab-btn btn-sm primary';
-  btnSavePattern.textContent = 'Enregistrer ce pattern';
-  btnSavePattern.title = 'Sauvegarder nom, description et fragments (instantané local)';
-  btnSavePattern.addEventListener('click', () => openSavePatternModal(patternKey, patternData));
-  actions.appendChild(btnSavePattern);
+  const avgSim = simCount ? simSum / simCount : 0;
 
-  // liste des membres
+  const pMeta = document.createElement('p');
+  pMeta.className = 'pattern-meta';
+  pMeta.textContent = `${ids.length} fragments — similarité moyenne : ${avgSim.toFixed(2)}`;
+  panel.appendChild(pMeta);
+
+  /* --------------------------------------------
+     3) CRITÈRES COMMUNS (moyenne fuzzy)
+  -------------------------------------------- */
+  const consens = computeConsensusCriteriaForIds(ids);
+
+  // On garde seulement les critères “significatifs”
+  const keysShown = Object.entries(consens)
+    .filter(([k, v]) => v !== null && v >= 0.2)
+    .sort((a, b) => b[1] - a[1]); // tri par importance
+
+  const critBlock = document.createElement('div');
+  critBlock.className = 'pattern-crit-block';
+
+  const hCrit = document.createElement('h3');
+  hCrit.textContent = 'Critères communs';
+  critBlock.appendChild(hCrit);
+
+  if (!keysShown.length) {
+    const none = document.createElement('p');
+    none.textContent = 'Aucun critère commun significatif.';
+    none.style.color = '#aaa';
+    critBlock.appendChild(none);
+  } else {
+    keysShown.forEach(([k, v]) => {
+      const row = document.createElement('div');
+      row.className = 'crit-row';
+
+      const label = document.createElement('span');
+      label.className = 'crit-label';
+      label.textContent = k.replace(/_/g, ' ');
+
+      const val = document.createElement('span');
+      val.className = 'crit-value';
+      val.textContent = v.toFixed(2);
+
+      row.append(label, val);
+      critBlock.appendChild(row);
+    });
+  }
+
+  panel.appendChild(critBlock);
+
+  /* --------------------------------------------
+     4) Liste des membres
+  -------------------------------------------- */
   const list = document.createElement('div');
   list.className = 'pattern-members';
 
-  const all = [...(dataGeojson || []), ...(datamGeojson || [])];
-  const byId = new Map(all.map(f => [f.properties.id, f]));
-  const patternMask = criteriaDictToMask(patternData.criteria || {});
+  const hList = document.createElement('h3');
+  hList.textContent = 'Fragments du pattern';
+  list.appendChild(hList);
 
-  (patternData.elements || []).forEach(id => {
+  ids.forEach(id => {
     const f = byId.get(id);
-    const row = document.createElement('div'); row.className = 'member-row';
+    if (!f) return;
 
-    const thumb = document.createElement('div'); thumb.className = 'member-thumb';
-    const first = cleanPhotoUrl(normalizePhotos(f?.properties?.photos)[0]);
-    if (first) thumb.style.backgroundImage = `url("${first}")`;
+    const row = document.createElement('div');
+    row.className = 'member-row';
 
-    const title = document.createElement('div'); title.className = 'member-title';
-    title.textContent = f?.properties?.name || id;
+    // photo
+    const thumb = document.createElement('div');
+    thumb.className = 'member-thumb';
+    const photoUrl = normalizePhotos(f.properties.photos)[0];
+    if (photoUrl) thumb.style.backgroundImage = `url("${photoUrl}")`;
 
-    const why = document.createElement('div'); why.className = 'member-why';
-    const fragMask = f ? getActiveMaskFor(f) : 0;
-    const { shared, different } = diffCriteria(patternMask, fragMask);
+    // titre
+    const right = document.createElement('div');
+    right.className = 'member-right';
 
-    const rowShared = document.createElement('div'); rowShared.className = 'crit-row';
-    rowShared.innerHTML = `<span class="crit-label">Partagés</span>`;
-    rowShared.appendChild(badgesFromMask(shared, 'badge-shared'));
+    const title = document.createElement('div');
+    title.className = 'member-title';
+    title.textContent = f.properties.name || id;
 
-    const rowDifferent = document.createElement('div'); rowDifferent.className = 'crit-row';
-    rowDifferent.innerHTML = `<span class="crit-label">Différents</span>`;
-    rowDifferent.appendChild(badgesFromMask(different, 'badge-different'));
+    // similarité du fragment au cluster
+    const simToPattern = computeFragmentPatternSimilarity(id, patternKey, byId);
 
-    row.addEventListener('click', () => showDetails(f?.properties || { id }));
+    const info = document.createElement('div');
+    info.className = 'member-info';
+    info.innerHTML = `<strong>Proximité :</strong> ${simToPattern.toFixed(2)}`;
 
-    why.append(rowShared, rowDifferent);
-    const right = document.createElement('div'); right.className = 'member-right'; right.append(title, why);
-
+    right.append(title, info);
     row.append(thumb, right);
+
+    row.addEventListener('click', () => showDetails(f.properties));
     list.appendChild(row);
   });
 
-  // ✅ maintenant on peut tout ajouter au panel
-  panel.append(h2, pCrit, legend, actions, list);
+  panel.appendChild(list);
+
+  /* --------------------------------------------
+     5) Actions
+  -------------------------------------------- */
+  const actions = document.createElement('div');
+  actions.className = 'btn-row';
+
+  const btnSave = document.createElement('button');
+  btnSave.className = 'tab-btn btn-sm primary';
+  btnSave.textContent = 'Enregistrer ce pattern';
+  btnSave.onclick = () => openSavePatternModal(patternKey, patternData);
+
+  actions.appendChild(btnSave);
+  panel.appendChild(actions);
 }
 
 
@@ -931,127 +1126,723 @@ function renderDiscoursePanel(panel, props) {
 }
 
 
-/*==================================================
-=                    VUE GALERIE                   =
-==================================================*/
+/***************************************************
+=                  VUE GALERIE (FUZZY)             =
+***************************************************/
 function showGalleryView() {
   const gallery = document.getElementById('gallery-view');
   gallery.innerHTML = '';
-  const wrapper = document.createElement('div'); wrapper.className = 'gallery-wrapper'; gallery.appendChild(wrapper);
 
-  Object.entries(patterns).forEach(([key, pattern]) => {
-    const block = document.createElement('section'); block.className = 'pattern-block';
+  const wrapper = document.createElement('div');
+  wrapper.className = 'gallery-wrapper';
+  gallery.appendChild(wrapper);
+
+  const allFeatures = [...(dataGeojson || []), ...(datamGeojson || [])];
+
+  const patternsEntries = Object.entries(patterns || {});
+  if (!patternsEntries.length) {
+    const msg = document.createElement('div');
+    msg.style.color = '#aaa';
+    msg.style.padding = '10px';
+    msg.textContent = "Aucun pattern trouvé avec le seuil de similarité actuel.";
+    gallery.appendChild(msg);
+    return;
+  }
+
+  patternsEntries.forEach(([key, pattern]) => {
+    const block = document.createElement('section');
+    block.className = 'pattern-block';
+
     const title = document.createElement('h3');
-    const crits = Object.keys(pattern.criteria).map(c => c.replace(/_/g, ' ')).join(', ');
-    title.className = 'pattern-title'; title.textContent = `${key} — Critères : ${crits}`;
-    const grid = document.createElement('div'); grid.className = 'photo-grid';
-    [...dataGeojson, ...datamGeojson].forEach(feature => {
-      if (pattern.elements.includes(feature.properties.id) && feature.properties.photos?.length) {
-        feature.properties.photos.forEach(photo => {
-          const cell = document.createElement('div'); cell.className = 'photo-cell';
-                    const img = makeImg(photo, feature.properties.name || feature.properties.id || 'photo');
+    title.className = 'pattern-title';
+
+    // ---- calcul similarité moyenne du pattern ----
+    const ids = pattern.elements || [];
+    const vecs = ids.map(id => {
+      const f = allFeatures.find(x => x.properties.id === id);
+      return f ? featureToVector(f) : null;
+    }).filter(v => v !== null);
+
+    let acc = 0, count = 0;
+    for (let i = 0; i < vecs.length; i++) {
+      for (let j = i + 1; j < vecs.length; j++) {
+        acc += similarityFuzzy(vecs[i], vecs[j]);
+        count++;
+      }
+    }
+    const avgSim = count ? (acc / count) : 0;
+
+    title.textContent = `${key} — ${ids.length} fragments — similarité moyenne ${avgSim.toFixed(2)}`;
+
+    const grid = document.createElement('div');
+    grid.className = 'photo-grid';
+
+    ids.forEach(id => {
+      const feature = allFeatures.find(f => f.properties.id === id);
+      if (!feature) return;
+
+      const fragName = feature.properties.name || id || 'Fragment';
+      const photosRaw = normalizePhotos(feature.properties.photos);
+      const photos = photosRaw.filter(Boolean); // enlève les "" éventuels
+
+      // Si le fragment a au moins une photo exploitable
+      if (photos.length) {
+        photos.forEach(photo => {
+          const cell = document.createElement('div');
+          cell.className = 'photo-cell';
+
+          const img = makeImg(photo, fragName);
           if (img) {
             img.onclick = () => showDetails(feature.properties);
             cell.appendChild(img);
+          } else {
+            // URL invalide → carré gris
+            cell.classList.add('no-photo');
+            cell.style.background = '#444';
+            cell.style.display = 'flex';
+            cell.style.alignItems = 'center';
+            cell.style.justifyContent = 'center';
+            cell.style.color = '#ddd';
+            cell.style.fontSize = '11px';
+            cell.style.cursor = 'pointer';
+
+            const label = document.createElement('div');
+            label.textContent = feature.properties.id || '—';
+            cell.appendChild(label);
+
+            cell.onclick = () => showDetails(feature.properties);
           }
 
-          img.loading = 'lazy'; img.decoding = 'async';
-          img.src = photo; img.alt = feature.properties.name || feature.properties.id || 'photo';
-          img.onclick = () => showDetails(feature.properties);
-          cell.appendChild(img); grid.appendChild(cell);
+          grid.appendChild(cell);
         });
+      } else {
+        // AUCUNE photo -> un seul carré gris par fragment
+        const cell = document.createElement('div');
+        cell.className = 'photo-cell no-photo';
+        cell.style.background = '#444';
+        cell.style.display = 'flex';
+        cell.style.alignItems = 'center';
+        cell.style.justifyContent = 'center';
+        cell.style.color = '#ddd';
+        cell.style.fontSize = '11px';
+        cell.style.cursor = 'pointer';
+
+        const label = document.createElement('div');
+        label.innerHTML = `<strong>${feature.properties.id || '—'}</strong><br>${fragName}`;
+        label.style.textAlign = 'center';
+
+        cell.appendChild(label);
+        cell.onclick = () => showDetails(feature.properties);
+
+        grid.appendChild(cell);
       }
     });
-    block.append(title, grid); wrapper.appendChild(block);
+
+    block.append(title, grid);
+    wrapper.appendChild(block);
   });
 }
+
+
 
 
 /*==================================================
 =                  VUE PROXÉMIQUE                  =
 ==================================================*/
-function showProxemicView() {
-  proxemicView.innerHTML = '';
-  const viewWidth = proxemicView.offsetWidth;
-  const viewHeight = proxemicView.offsetHeight;
+const FUZZY_GROUPS = {
+  PA: [
+    "PA_P1_intensitesoin","PA_P1_frequencegestes","PA_P1_degrecooperation",
+    "PA_P2_degretransformation","PA_P2_perrenite","PA_P2_autonomie",
+    "PA_P3_intensiteusage","PA_P3_frequenceusage","PA_P3_diversitepublic","PA_P3_conflitusage"
+  ],
+  DH: [
+    "DH_P1_degreinformalite","DH_P1_echellepratique","DH_P1_degremutualisation",
+    "DH_P2_degréorganisation","DH_P2_porteepolitique","DH_P2_effetspatial",
+    "DH_P3_attachement","DH_P4_intensiteflux"
+  ],
+  FS: [
+    "FS_P1_presenceinstitutionnelle","FS_P1_intensitecontrole",
+    "FS_P2_abandon","FS_P3_pressionfoncière"
+  ]
+};
 
-  const categories = {
-    percu: ["frequence_usage_ponctuel","frequence_usage_regulier","frequence_usage_quotidien","mode_usage_prevu","mode_usage_detourne","mode_usage_creatif","intensite_usage_faible","intensite_usage_moyenne","intensite_usage_forte","intensite_usage_saturee"],
-    concu: ["echelle_micro","echelle_meso","echelle_macro","origine_forme_institutionnelle","origine_forme_singuliere","origine_forme_collective","accessibilite_libre","accessibilite_semi_ouverte","accessibilite_fermee","visibilite_cachee","visibilite_visible","visibilite_exposee"],
-    vecu:  ["acteurs_visibles_habitant","acteurs_visibles_institution","acteurs_visibles_collectif","acteurs_visibles_invisible","rapport_affectif_symbolique"]
-  };
-  function getDominantCategory(criteria) {
-    const counts = { percu: 0, concu: 0, vecu: 0 };
-    for (const key of Object.keys(criteria)) {
-      if (categories.percu.includes(key)) counts.percu++;
-      if (categories.concu.includes(key)) counts.concu++;
-      if (categories.vecu.includes(key))  counts.vecu++;
-    }
-    return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
-  }
+function computeGroupScore(ids, groupKeys) {
+  const all = [...dataGeojson, ...datamGeojson];
 
-  const positions = {
-    percu: { x: viewWidth * 0.25, y: viewHeight * 0.35 },
-    concu: { x: viewWidth * 0.75, y: viewHeight * 0.35 },
-    vecu:  { x: viewWidth * 0.50, y: viewHeight * 0.80 }
-  };
-  const radiusScale = d => 8 + d.elements.length * 2;
-  const collisionPadding = 4;
+  let sum = 0, count = 0;
 
-  const patternData = Object.values(patterns).map(pattern => {
-    const id = Object.keys(patterns).find(key => patterns[key] === pattern);
-    const category = getDominantCategory(pattern.criteria);
-    return { id, name: pattern.name, criteria: pattern.criteria, elements: pattern.elements,
-             category, x: positions[category].x + (Math.random()-0.5)*50, y: positions[category].y + (Math.random()-0.5)*50 };
+  ids.forEach(id => {
+    const f = all.find(x => x.properties.id === id);
+    groupKeys.forEach(k => {
+      const v = parseFuzzy(f.properties[k]);
+      if (v !== null) {
+        sum += v;
+        count++;
+      }
+    });
   });
 
-  const svgWidth = viewWidth * 2.5;
-  const svgHeight = viewHeight * 2.5;
-  const svg = d3.select("#proxemic-view").append("svg")
-    .attr("width", svgWidth).attr("height", svgHeight)
-    .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
-    .call(d3.zoom().on("zoom", (event) => { root.attr("transform", event.transform); }));
-  const root = svg.append("g");
-
-  const simulation = d3.forceSimulation(patternData)
-    .force("x", d3.forceX(d => positions[d.category].x).strength(0.1))
-    .force("y", d3.forceY(d => positions[d.category].y).strength(0.1))
-    .force("collide", d3.forceCollide(d => radiusScale(d) + collisionPadding).iterations(3))
-    .stop();
-  for (let i=0;i<120;++i) simulation.tick();
-
-  const patternNodes = root.selectAll(".pattern-node")
-    .data(patternData).join("g").attr("class","pattern-node")
-    .attr("transform", d => `translate(${d.x},${d.y})`);
-
-  patternNodes.append("circle")
-    .attr("r", d => radiusScale(d))
-    .style("fill", d => colorForPattern(d.id))
-    .style("stroke", d => colorForPattern(d.id))
-    .style("stroke-width", 2)
-    .style("cursor", "pointer")
-    .on("click", (_ev, d) => showDetails({ isPattern: true, patternKey: d.id, elements: d.elements, criteria: d.criteria }));
-
-  patternNodes.append("text")
-    .style("text-anchor","middle").style("font-size","12px").style("font-weight","bold")
-    .style("fill", d => labelColorForPattern(d.id))
-    .text(d => d.name);
-
-  function addLabelWithBackground(g, x, y, textContent) {
-    const group = g.append("g").attr("transform", `translate(${x}, ${y})`);
-    const text = group.append("text").text(textContent)
-      .attr("x",0).attr("y",0).style("fill","white").style("font-size","14px").style("font-weight","bold")
-      .style("text-anchor","middle").attr("dominant-baseline","middle");
-    const bbox = text.node().getBBox();
-    group.insert("rect","text")
-      .attr("x", bbox.x - 6).attr("y", bbox.y - 2)
-      .attr("width", bbox.width + 12).attr("height", bbox.height + 4)
-      .attr("fill","black").attr("rx",3).attr("ry",3);
-  }
-  addLabelWithBackground(root, positions.percu.x, positions.percu.y - 80, "Espace perçu (usage)");
-  addLabelWithBackground(root, positions.concu.x, positions.concu.y - 80, "Espace conçu");
-  addLabelWithBackground(root, positions.vecu.x, positions.vecu.y + 80, "Espace vécu (expérience)");
+  return count ? (sum / count) : 0;
 }
+
+
+/***************************************************
+ *  PROXÉMIE 2025 — Concentrique, Fuzzy, Interactive
+ *  - Disparition si : zone décochée OU aucun critère actif
+ *  - 3 anneaux : PA (intérieur) • DH (médian) • FS (extérieur)
+ *  - Patterns = anneaux colorés
+ *  - Pan / zoom infini
+ ***************************************************/
+
+// Ouvre l’onglet fragment + tous ses patterns associés
+function openFragmentWithPatternsTabs(fProps) {
+  if (!fProps) return;
+
+  clearAllTabbedTabs();
+  closeSidebars();
+
+  const fragId = fProps.id || Math.random().toString(36).slice(2);
+  const fragTabId = `frag-${fragId}`;
+
+  // 1) Onglet fragment
+  openTab({
+    id: fragTabId,
+    title: fProps.id || 'Fragment',
+    kind: 'fragment',
+    render: (panel) => renderFragmentPanel(panel, fProps)
+  });
+
+  // 2) Onglets patterns associés
+  const pList = getPatternsForFragment(fragId);
+  pList.forEach(pName => {
+    const pData = patterns[pName];
+    if (!pData) return;
+    openTab({
+      id: `pattern-${pName}`,
+      title: pName,
+      kind: 'pattern',
+      render: (panel) => renderPatternPanel(panel, pName, pData)
+    });
+  });
+
+  // 3) On remet le focus sur le fragment
+  focusTab(fragTabId);
+}
+
+
+function showProxemicView() {
+
+  /* -----------------------------------------------------------
+   * 0) RESET + DIMENSIONS
+   * ----------------------------------------------------------- */
+  proxemicView.innerHTML = "";
+
+  const rect = proxemicView.getBoundingClientRect();
+  const W = rect.width;
+  const H = rect.height;
+
+  // Centre visuel légèrement abaissé
+  const CX = W * 0.50;
+  const CY = H * 0.53;
+
+  // On agrandit volontairement le camembert
+  const R_BASE  = Math.min(W, H) * 0.42;
+  const R_INNER = R_BASE * 0.15;
+  const R_OUTER = R_BASE * 0.95;
+
+  const TWO_PI = Math.PI * 2;
+
+  /* -----------------------------------------------------------
+   * 1) DÉFINITION STRUCTURELLE DES PÔLES + CLÉS FUZZY
+   * ----------------------------------------------------------- */
+  const GROUP_DETAILS = {
+    PA: {
+      entretien: [
+        "PA_P1_intensitesoin", "PA_P1_frequencegestes", "PA_P1_degrecooperation"
+      ],
+      appr_spatiale: [
+        "PA_P2_degretransformation", "PA_P2_perrenite", "PA_P2_autonomie"
+      ],
+      appr_sociale: [
+        "PA_P3_intensiteusage", "PA_P3_frequenceusage",
+        "PA_P3_diversitepublic", "PA_P3_conflitusage"
+      ]
+    },
+    DH: {
+      econ_subs: [
+        "DH_P1_degreinformalite", "DH_P1_echellepratique", "DH_P1_degremutualisation"
+      ],
+      contest: [
+        "DH_P2_degréorganisation", "DH_P2_porteepolitique", "DH_P2_effetspatial"
+      ],
+      symbolique: [
+        "DH_P3_attachement"
+      ],
+      mobilites: [
+        "DH_P4_intensiteflux"
+      ]
+    },
+    FS: {
+      gouvernance: [
+        "FS_P1_presenceinstitutionnelle", "FS_P1_intensitecontrole"
+      ],
+      vacance: [
+        "FS_P2_abandon"
+      ],
+      marche: [
+        "FS_P3_pressionfoncière"
+      ]
+    }
+  };
+
+  const SUB_ORDER = {
+    PA: ["entretien", "appr_spatiale", "appr_sociale"],
+    DH: ["econ_subs", "contest", "symbolique", "mobilites"],
+    FS: ["gouvernance", "vacance", "marche"]
+  };
+
+  const SUB_LABELS = {
+    entretien:     "Entretien / care",
+    appr_spatiale: "Appropriation spatiale",
+    appr_sociale:  "Appropriation sociale",
+    econ_subs:     "Éco. de subsistance",
+    contest:       "Contestation / militantisme",
+    symbolique:    "Symbolique",
+    mobilites:     "Mobilités",
+    gouvernance:   "Cadres de gouvernance",
+    vacance:       "Vacance",
+    marche:        "Économie de marché"
+  };
+
+  const SECTORS = {
+    PA: {
+      start: -Math.PI/2,
+      end:   -Math.PI/2 + TWO_PI/3
+    },
+    FS: {
+      start: -Math.PI/2 + TWO_PI/3,
+      end:   -Math.PI/2 + 2*TWO_PI/3
+    },
+    DH: {
+      start: -Math.PI/2 + 2*TWO_PI/3,
+      end:   -Math.PI/2 + TWO_PI
+    }
+  };
+
+  function poleCategory(sub) {
+    if (SUB_ORDER.PA.includes(sub)) return "PA";
+    if (SUB_ORDER.FS.includes(sub)) return "FS";
+    if (SUB_ORDER.DH.includes(sub)) return "DH";
+    return null;
+  }
+
+  function computeSubScores(feature) {
+    const scores = {};
+    for (const [zone, subs] of Object.entries(GROUP_DETAILS)) {
+      for (const [subName, keys] of Object.entries(subs)) {
+        let sum = 0, n = 0;
+        for (const k of keys) {
+          if (!ACTIVE_FUZZY_KEYS.has(k)) continue;
+          const v = parseFuzzy(feature.properties[k]);
+          if (v !== null) { sum += v; n++; }
+        }
+        scores[subName] = n ? (sum / n) : 0;
+      }
+    }
+    return scores;
+  }
+
+  function angleForSub(cat, sub) {
+    const order = SUB_ORDER[cat];
+    const idx   = order.indexOf(sub);
+
+    if (idx === -1) {
+      const s = SECTORS[cat].start, e = SECTORS[cat].end;
+      return (s + e) / 2;
+    }
+
+    const s = SECTORS[cat].start;
+    const e = SECTORS[cat].end;
+    const slice = (e - s) / order.length;
+    const subStart = s + idx * slice;
+    const subEnd   = subStart + slice;
+
+    return (subStart + subEnd) / 2;
+  }
+
+  function hasAnyActiveCriterion(feature) {
+    for (const k of ALL_FUZZY_KEYS) {
+      if (!ACTIVE_FUZZY_KEYS.has(k)) continue;
+      if (parseFuzzy(feature.properties[k]) !== null) return true;
+    }
+    return false;
+  }
+
+  function cleanId(id) {
+    return id ? String(id).trim().toUpperCase() : "";
+  }
+
+  /* -----------------------------------------------------------
+   * 2) SÉLECTION DES FRAGMENTS
+   * ----------------------------------------------------------- */
+  const raw = [...(dataGeojson||[]), ...(datamGeojson||[])];
+  const zonesActive = getActiveZones ? getActiveZones() : ["mirail","montreuil"];
+
+  let features = raw
+    .filter(f => f.properties && f.properties.id)
+    .filter(f => !f.properties.isDiscourse)
+    .map(f => {
+      f.properties.id = cleanId(f.properties.id);
+      return f;
+    });
+
+  if (zonesActive.length) {
+    features = features.filter(f => {
+      const id = f.properties.id;
+      if (id.startsWith("M")) return zonesActive.includes("mirail");
+      if (id.startsWith("N")) return zonesActive.includes("montreuil");
+      return true;
+    });
+  }
+
+  features = features.filter(f => hasAnyActiveCriterion(f));
+
+  if (!features.length) {
+    proxemicView.innerHTML = "<div style='color:#aaa;padding:10px'>Aucun fragment.</div>";
+    return;
+  }
+
+  /* -----------------------------------------------------------
+   * 3) CALCUL : SOUS-PÔLE DOMINANT + RAYON
+   * ----------------------------------------------------------- */
+  const proxCandidates = [];
+  let minScore = Infinity, maxScore = -Infinity;
+
+  features.forEach(f => {
+    const subScores = computeSubScores(f);
+
+    let bestSub = null, bestScore = 0;
+    Object.entries(subScores).forEach(([sub, val]) => {
+      if (val > bestScore) {
+        bestScore = val;
+        bestSub   = sub;
+      }
+    });
+
+    if (!bestSub) return;
+
+    const cat = poleCategory(bestSub);
+    if (!cat) return;
+
+    if (bestScore < minScore) minScore = bestScore;
+    if (bestScore > maxScore) maxScore = bestScore;
+
+    proxCandidates.push({
+      id: f.properties.id,
+      feature: f,
+      bestSub,
+      bestScore,
+      category: cat,
+      patterns: getPatternsForFragment ? getPatternsForFragment(f.properties.id) : []
+    });
+  });
+
+  if (!proxCandidates.length) return;
+
+  if (minScore === maxScore) minScore = maxScore - 1;
+
+  /* -----------------------------------------------------------
+   * 4) SVG + CALCUL POSITIONS INITIALES (PÔLAIRES)
+   * ----------------------------------------------------------- */
+  const svg = d3.select("#proxemic-view")
+    .append("svg")
+    .attr("width", W)
+    .attr("height", H);
+
+  const world      = svg.append("g");
+  const slicesLayer = world.append("g");
+  const linksLayer  = world.append("g");
+  const nodesLayer  = world.append("g");
+  const labelsLayer = world.append("g");
+
+  svg.call(
+    d3.zoom()
+      .scaleExtent([0.4, 4])
+      .on("zoom", ev => world.attr("transform", ev.transform))
+  );
+
+/* -----------------------------------------------------------
+ * 5) ARCS DU CAMEMBERT (CORRIGÉ — ANNEAU + ROTATION PARFAITE)
+ * ----------------------------------------------------------- */
+
+// => correction clé : on dessine un DONUT, pas un disque plein
+const arc = d3.arc()
+  .innerRadius(0)   // idem fragments → parfaitement aligné
+  .outerRadius(R_BASE);          // bord extérieur
+
+const sectors = [
+  { key:"PA", label:"Pratiques actives" },
+  { key:"FS", label:"Forces structurantes" },
+  { key:"DH", label:"Dynamiques hybrides" }
+];
+
+// 1) Secteurs = anneaux
+slicesLayer.selectAll("path.sector")
+  .data(sectors)
+  .join("path")
+  .attr("class","sector")
+  .attr("d",d=>arc({
+    startAngle: SECTORS[d.key].start + Math.PI/2,   // 🔥 correction
+    endAngle:   SECTORS[d.key].end   + Math.PI/2    // 🔥 correction
+  }))
+  .attr("transform",`translate(${CX},${CY})`)
+  .style("fill","none")
+  .style("stroke","rgba(255,255,255,0.45)")
+  .style("stroke-width",2);
+
+
+// 2) Lignes radiales divisant le donut
+sectors.forEach(s => {
+  const cat = s.key;
+  const list = SUB_ORDER[cat];
+  if (!list) return;
+
+  const slice = (SECTORS[cat].end - SECTORS[cat].start) / list.length;
+
+  for (let i=1;i<list.length;i++){
+    const ang = SECTORS[cat].start + i*slice;
+
+    slicesLayer.append("line")
+  .attr("x1", CX)
+  .attr("y1", CY)
+  .attr("x2", CX + R_BASE * Math.cos(ang))
+  .attr("y2", CY + R_BASE * Math.sin(ang))
+  .style("stroke", "rgba(255,255,255,0.25)")
+  .style("stroke-width", 1);
+
+  }
+});
+
+
+  /* -----------------------------------------------------------
+   * 6) LABELS EXTÉRIEURS
+   * ----------------------------------------------------------- */
+  const R_LABEL = R_BASE * 1.12;
+
+// grands pôles — orientés comme les rayons + éloignés + plus grands
+const R_LABEL_MAIN = R_BASE * 1.32; // plus loin que les sub labels
+
+sectors.forEach(s => {
+  const ang = (SECTORS[s.key].start + SECTORS[s.key].end) / 2;
+
+  const x = CX + R_LABEL_MAIN * Math.cos(ang);
+  const y = CY + R_LABEL_MAIN * Math.sin(ang);
+
+  let deg = (ang * 180 / Math.PI) + 90;
+if (deg > 90 && deg < 270) deg += 180;
+
+
+  labelsLayer.append("text")
+    .attr("x", x)
+    .attr("y", y)
+    .attr("transform", `rotate(${deg}, ${x}, ${y})`)
+    .text(s.label)
+    .style("fill", "#fff")
+    .style("font-size", "22px")     // plus grand
+    .style("font-weight", "900")    // plus gras
+    .style("text-anchor", "middle")
+    .style("pointer-events", "none");
+});
+
+
+  // sous-pôles
+  Object.entries(SUB_ORDER).forEach(([cat, subs])=>{
+    subs.forEach(sub=>{
+      const ang = angleForSub(cat, sub);
+      const x = CX + R_LABEL*Math.cos(ang);
+      const y = CY + R_LABEL*Math.sin(ang);
+
+let deg = (ang * 180 / Math.PI) + 90;
+if (deg > 90 && deg < 270) deg += 180;
+
+
+labelsLayer.append("text")
+  .attr("x", x)
+  .attr("y", y)
+  .attr("transform", `rotate(${deg}, ${x}, ${y})`)
+  .text(SUB_LABELS[sub] || sub)
+  .style("fill","#fff")
+  .style("font-size","11px")
+  .style("font-weight","600")
+  .style("text-anchor","middle")
+  .style("pointer-events","none");
+    });
+  });
+
+  /* -----------------------------------------------------------
+   * 7) POSITIONS INITIALES DES FRAGMENTS
+   * ----------------------------------------------------------- */
+  const proxData = proxCandidates.map(c=>{
+    const n = (c.bestScore - minScore) / (maxScore - minScore || 1);
+    const radius = R_INNER + n*(R_OUTER - R_INNER);
+    const theta  = angleForSub(c.category, c.bestSub);
+
+    const x = CX + radius*Math.cos(theta);
+    const y = CY + radius*Math.sin(theta);
+
+    return {
+      ...c,
+      x, y, r:radius, theta
+    };
+  });
+
+  /* -----------------------------------------------------------
+   * 8) ANTI-COLLISION (force layout)
+   * ----------------------------------------------------------- */
+  const sim = d3.forceSimulation(proxData)
+    .force("x", d3.forceX(d=>d.x).strength(1))
+    .force("y", d3.forceY(d=>d.y).strength(1))
+    .force("collide", d3.forceCollide(15))
+    .stop();
+
+  for (let i=0;i<200;i++) sim.tick();
+
+  proxData.forEach(d=>{
+    d.x = d.x + (d.vx||0);
+    d.y = d.y + (d.vy||0);
+  });
+
+  /* -----------------------------------------------------------
+   * 9) LIENS DE PATTERNS
+   * ----------------------------------------------------------- */
+  const meshLinks = [];
+  for (let i=0;i<proxData.length;i++){
+    for (let j=i+1;j<proxData.length;j++){
+      const A = proxData[i], B = proxData[j];
+      const common = A.patterns.filter(p=>B.patterns.includes(p));
+      if (common.length){
+        meshLinks.push({
+          source:A, target:B,
+          color: colorForPattern ? colorForPattern(common[0]) : "#888"
+        });
+      }
+    }
+  }
+
+  linksLayer.selectAll("line.link")
+    .data(meshLinks)
+    .join("line")
+    .attr("class","link")
+    .attr("x1",d=>d.source.x)
+    .attr("y1",d=>d.source.y)
+    .attr("x2",d=>d.target.x)
+    .attr("y2",d=>d.target.y)
+    .style("stroke",d=>d.color)
+    .style("stroke-width",2)
+    .style("opacity",0.25);
+
+  /* -----------------------------------------------------------
+   * 10) NŒUDS (FRAGMENTS)
+   * ----------------------------------------------------------- */
+  const nodes = nodesLayer.selectAll("g.node")
+    .data(proxData)
+    .join("g")
+    .attr("class","node")
+    .attr("transform", d=>"translate("+d.x+","+d.y+")");
+
+// patterns rings (réduits à ~70%)
+nodes.each(function(d){
+  if (!d.patterns) return;
+  d.patterns.slice()
+    .sort((a,b)=>parseInt(a.slice(1))-parseInt(b.slice(1)))
+    .forEach((p,i)=>{
+      d3.select(this).append("circle")
+        .attr("r", 11 + i*3) // 16→11, 4→3
+        .style("fill","none")
+        .style("stroke", colorForPattern ? colorForPattern(p) : "#999")
+        .style("stroke-width",2)
+        .style("pointer-events","none");
+    });
+});
+
+
+// cercle central (réduit à ~70%)
+nodes.append("circle")
+  .attr("r",8) // 12 → 8
+  .style("fill","#fff")
+  .style("stroke","#222")
+  .style("cursor","pointer")
+  .on("click",(ev,d)=>{
+    ev.stopPropagation();
+    openFragmentWithPatternsTabs(d.feature.properties);
+  });
+
+
+// label id (réduit à ~70%)
+nodes.append("text")
+  .text(d=>d.id)
+  .attr("dy","0.35em")
+  .style("text-anchor","middle")
+  .style("font-size","7px") // 11px → 8px
+  .style("font-weight","bold")
+  .style("pointer-events","none");
+
+
+  /* -----------------------------------------------------------
+   * 11) INTERACTIONS : HOVER / CLICK
+   * ----------------------------------------------------------- */
+  let selected = null;
+
+  function highlight(id){
+    linksLayer.selectAll("line.link")
+      .style("opacity",d => (d.source.id===id || d.target.id===id)?0.9:0.05);
+
+    const connected = new Set([id]);
+    meshLinks.forEach(L=>{
+      if (L.source.id===id) connected.add(L.target.id);
+      if (L.target.id===id) connected.add(L.source.id);
+    });
+
+    nodes.style("opacity",n => connected.has(n.id)?1:0.1);
+  }
+
+  function reset(){
+    if (selected) return;
+    nodes.style("opacity",1);
+    linksLayer.selectAll("line.link")
+      .style("opacity",0.25);
+  }
+
+  nodes
+    .on("mouseenter",function(ev,d){
+      if (selected) return;
+      highlight(d.id);
+    })
+    .on("mouseleave",function(){
+      if (selected) return;
+      reset();
+    })
+    .on("click",function(ev,d){
+      ev.stopPropagation();
+      if (selected===d.id){
+        selected=null;
+        reset();
+      } else {
+        selected=d.id;
+        highlight(d.id);
+      }
+      openFragmentWithPatternsTabs(d.feature.properties);
+    });
+
+  svg.on("click",()=>{
+    selected=null;
+    reset();
+  });
+}
+
+
+
+
 
 
 /*==================================================
@@ -1075,6 +1866,20 @@ function setView(viewId) {
 function updateInterfaceElements(viewId) {
   const legendBtn   = document.getElementById('toggle-legend-btn');
   const locationBtn = document.getElementById('toggle-location-btn');
+
+  document.querySelectorAll('.crit-key').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const key = cb.dataset.key;
+    if (!key) return;
+
+    if (cb.checked) ACTIVE_FUZZY_KEYS.add(key);
+    else ACTIVE_FUZZY_KEYS.delete(key);
+
+    // Recompute ↓↓↓
+    applyFilters();
+  });
+});
+
 
   // ✅ bouton "Critères actifs" visible sur : Carte (patterns-map), Proxémie, Galerie
   const wantsLegend =
@@ -1179,26 +1984,74 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && aboutBox.style.display === 'block') toggleAbout(); });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  /* -------------------------
+     RESET CHECKBOXES → cochées
+  ------------------------- */
 
-/*==================================================
-=          SLIDER SEUIL DE SIMILARITÉ              =
-==================================================*/
+  // Zones (Montreuil / Mirail)
+  document.querySelectorAll('.filter-zone').forEach(cb => {
+    cb.checked = true;
+  });
+
+  // Critères fuzzy
+  document.querySelectorAll('.crit-key').forEach(cb => {
+    cb.checked = true;
+  });
+
+  // Reset état interne fuzzy
+  ACTIVE_FUZZY_KEYS = new Set(ALL_FUZZY_KEYS);
+
+  // Recalcul général
+  applyFilters();
+  recomputePatternsAndRefreshViews();
+});
+
+
+/***************************************************
+=          SLIDER SEUIL DE SIMILARITÉ (FUZZY)      =
+***************************************************/
+
 function debounce(fn, delay = 160) {
-  let t; return function (...args) { const ctx = this; clearTimeout(t); t = setTimeout(() => fn.apply(ctx, args), delay); };
+  let t;
+  return function (...args) {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), delay);
+  };
 }
+
 const sliderEl = document.getElementById('similarity-slider');
-sliderEl.addEventListener('input', debounce(function (e) {
-  const value = parseInt(e.target.value, 10);
-  patternThreshold = value;
-  document.getElementById('slider-value').textContent = value;
-  const visible = [...(dataGeojson || []), ...(datamGeojson || [])]
-    .filter(f => isFeatureInActiveZones ? isFeatureInActiveZones(f) : true)
-    .filter(f => !f.properties?.isDiscourse);
-  patterns = identifyPatterns(visible);
-  if (currentView === 'gallery')      showGalleryView();
-  else if (currentView === 'proxemic') showProxemicView();
-  else if (currentView === 'patterns-map') { renderPatternBaseGrey(); refreshPatternsMap(); }
-}, 160));
+const sliderValueEl = document.getElementById('slider-value');
+
+if (sliderEl && sliderValueEl) {
+  // Valeur initiale (75 → 0.75 par défaut)
+  const initial = parseInt(sliderEl.value, 10) / 100;
+  SIM_THRESHOLD = initial;
+  sliderValueEl.textContent = initial.toFixed(2);
+
+  sliderEl.addEventListener('input', debounce(e => {
+    const v = parseInt(e.target.value, 10);    // ex : 50–95
+    SIM_THRESHOLD = v / 100;                   // 0.50–0.95
+    sliderValueEl.textContent = SIM_THRESHOLD.toFixed(2);
+
+    const visible = [
+      ...(dataGeojson || []),
+      ...(datamGeojson || [])
+    ]
+      .filter(f => isFeatureInActiveZones ? isFeatureInActiveZones(f) : true)
+      .filter(f => !f.properties?.isDiscourse);
+
+    recomputePatternsAndRefreshViews();
+
+    if (currentView === 'gallery')       showGalleryView();
+    else if (currentView === 'proxemic') showProxemicView();
+    else if (currentView === 'patterns-map') {
+      renderPatternBaseGrey();
+      refreshPatternsMap();
+    }
+  }, 160));
+}
+
 
 
 /*==================================================
@@ -1227,7 +2080,8 @@ function colorForPattern(pName) {
     const idx = ((n - 1) % 100) + 1;
     return PATTERN_COLORS[`P${idx}`];
   }
-  let h = 0; for (const c of String(pName)) h = (h * 31 + c.charCodeAt(0)) % 360;
+  let h = 0;
+  for (const c of String(pName)) h = (h * 31 + c.charCodeAt(0)) % 360;
   return `hsl(${h}, 90%, 55%)`;
 }
 window.colorForPattern = colorForPattern;
@@ -1239,35 +2093,51 @@ function labelColorForPattern(pName) {
   return (L >= 62) ? '#000' : '#fff';
 }
 
+/* Zones actives (Montreuil/Mirail) */
 function getActiveZones() {
   return Array.from(document.querySelectorAll('.filter-zone:checked')).map(cb => cb.value);
 }
 function isFeatureInActiveZones(f) {
   const zones = getActiveZones();
-  const id = f.properties?.id || '';
-  const isN = id.startsWith('N');
-  const isM = id.startsWith('M');
-  return (isN && zones.includes('montreuil')) || (isM && zones.includes('mirail'));
+  const zone = f.properties?.zone || f.zone || null;
+  if (!zone) return true; // fallback
+
+  return zones.includes(zone);
 }
+
+/* Patterns auxquels appartient un fragment */
 function getPatternsForFragment(fragmentId) {
   const result = [];
-  Object.entries(patterns || {}).forEach(([pName, pData]) => { if ((pData.elements || []).includes(fragmentId)) result.push(pName); });
-  result.sort((a, b) => parseInt(a.replace('P','')) - parseInt(b.replace('P','')));
+  Object.entries(patterns || {}).forEach(([pName, pData]) => {
+    if ((pData.elements || []).includes(fragmentId)) result.push(pName);
+  });
+  result.sort((a, b) => parseInt(a.replace('P', ''), 10) - parseInt(b.replace('P', ''), 10));
   return result;
 }
 
+/* Init carte patterns */
 function initPatternMapOnce() {
   if (patternMap) return;
-  patternMap = L.map('patterns-map', { zoomControl: true, attributionControl: true }).setView(montreuilView, montreuilZoom);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors, © CartoDB' }).addTo(patternMap);
+  patternMap = L.map('patterns-map', { zoomControl: true, attributionControl: true })
+    .setView(montreuilView, montreuilZoom);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors, © CartoDB'
+  }).addTo(patternMap);
+
   patternBaseLayer = L.layerGroup().addTo(patternMap);
   patternOverlayGroup = L.layerGroup().addTo(patternMap);
 
-  fetch('data/contour.geojson').then(r => r.json()).then(contour => {
-    L.geoJSON(contour, { style: { color:'#919090', weight:2, opacity:0.8, fillOpacity:0 } }).addTo(patternMap);
-  });
+  fetch('data/contour.geojson')
+    .then(r => r.json())
+    .then(contour => {
+      L.geoJSON(contour, {
+        style: { color: '#919090', weight: 2, opacity: 0.8, fillOpacity: 0 }
+      }).addTo(patternMap);
+    });
 }
 
+/* Pane par anneau (zIndex différent) */
 function ensureRingPane(ringIndex) {
   const paneId = `pane-ring-${ringIndex}`;
   if (patternPanes.has(paneId)) return paneId;
@@ -1277,110 +2147,202 @@ function ensureRingPane(ringIndex) {
   return paneId;
 }
 
+/* Centre d'un feature */
 function getFeatureCenter(feature) {
   if (feature.geometry?.type === 'Point') {
-    const c = feature.geometry.coordinates; return L.latLng(c[1], c[0]);
+    const c = feature.geometry.coordinates;
+    return L.latLng(c[1], c[0]);
   }
   const tmp = L.geoJSON(feature);
-  try { return tmp.getBounds().getCenter(); }
-  catch(e) {
-    const c = (feature.geometry && feature.geometry.coordinates && feature.geometry.coordinates[0]) || [0,0];
+  try {
+    return tmp.getBounds().getCenter();
+  } catch (e) {
+    const c = (feature.geometry && feature.geometry.coordinates && feature.geometry.coordinates[0]) || [0, 0];
     return L.latLng(c[1] || 0, c[0] || 0);
   }
 }
 
+/* Fond gris : fragments visibles */
 function renderPatternBaseGrey() {
   if (!patternMap) return;
   patternBaseLayer.clearLayers();
-  const baseStyle = { color:'#777', weight:1, opacity:1, fillColor:'#777', fillOpacity:0.25 };
+
+  const baseStyle = {
+    color: '#777',
+    weight: 1,
+    opacity: 1,
+    fillColor: '#777',
+    fillOpacity: 0.25
+  };
+
   const filterActiveZones = feat => isFeatureInActiveZones(feat) && !feat.properties.isDiscourse;
 
   if (dataGeojson?.length) {
-    L.geoJSON({ type:'FeatureCollection', features: dataGeojson }, {
-      filter: filterActiveZones,
-      pointToLayer: (f, latlng) => L.circleMarker(latlng, { ...baseStyle, radius: 4 }),
-      style: () => baseStyle,
-      onEachFeature: (feature, layer) => { layer.on('click', () => onPatternsMapFragmentClick(feature)); }
-    }).addTo(patternBaseLayer);
+    L.geoJSON(
+      { type: 'FeatureCollection', features: dataGeojson },
+      {
+        filter: filterActiveZones,
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { ...baseStyle, radius: 4 }),
+        style: () => baseStyle,
+        onEachFeature: (feature, layer) => {
+          layer.on('click', () => onPatternsMapFragmentClick(feature));
+        }
+      }
+    ).addTo(patternBaseLayer);
   }
+
   if (datamGeojson?.length) {
-    L.geoJSON({ type:'FeatureCollection', features: datamGeojson }, {
-      filter: filterActiveZones,
-      pointToLayer: (f, latlng) => L.circleMarker(latlng, { ...baseStyle, radius: 4 }),
-      style: () => baseStyle,
-      onEachFeature: (feature, layer) => { layer.on('click', () => onPatternsMapFragmentClick(feature)); }
-    }).addTo(patternBaseLayer);
+    L.geoJSON(
+      { type: 'FeatureCollection', features: datamGeojson },
+      {
+        filter: filterActiveZones,
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { ...baseStyle, radius: 4 }),
+        style: () => baseStyle,
+        onEachFeature: (feature, layer) => {
+          layer.on('click', () => onPatternsMapFragmentClick(feature));
+        }
+      }
+    ).addTo(patternBaseLayer);
   }
 }
 
+/* Similarité moyenne d'un fragment à tous les membres d'un pattern (fuzzy) */
+function computeFragmentPatternSimilarity(fragmentId, patternName, byId) {
+  const pData = patterns[patternName];
+  if (!pData) return 0;
+
+  const ids = pData.elements || [];
+  if (ids.length <= 1) return 1;
+
+  const frag = byId.get(fragmentId);
+  if (!frag) return 0;
+
+  const vecF = featureToVector(frag);
+
+  let sum = 0;
+  let count = 0;
+
+  ids.forEach(id => {
+    if (id === fragmentId) return;
+    const other = byId.get(id);
+    if (!other) return;
+    const vecO = featureToVector(other);
+    const sim = similarityFuzzy(vecF, vecO);
+    sum += sim;
+    count++;
+  });
+
+  if (!count) return 0;
+  return sum / count;
+}
+
+/* Rafraîchit les anneaux colorés (patterns) */
 function refreshPatternsMap() {
   if (!patternMap) return;
   patternOverlayGroup.clearLayers();
-  if (!combinedFeatures.length) combinedFeatures = [...(dataGeojson || []), ...(datamGeojson || [])];
+
+  // toujours recalculer la liste complète
+  combinedFeatures = [...(dataGeojson || []), ...(datamGeojson || [])];
+
   const byId = new Map(combinedFeatures.map(f => [f.properties.id, f]));
-  const entries = Object.entries(patterns);
   const membersByFragment = new Map();
 
-  entries.forEach(([pName, pData]) => {
+  Object.entries(patterns).forEach(([pName, pData]) => {
     (pData.elements || []).forEach(id => {
-      const f = byId.get(id); if (!f) return;
+      const f = byId.get(id);
+      if (!f) return;
       if (f.properties.isDiscourse) return;
       if (!isFeatureInActiveZones(f)) return;
+
       if (!membersByFragment.has(id)) membersByFragment.set(id, []);
       membersByFragment.get(id).push(pName);
     });
   });
 
-  const BASE_RADIUS  = 5;
+  const BASE_RADIUS = 5;
   const RING_SPACING = 3;
-  const RING_WEIGHT  = 2;
+  const RING_WEIGHT = 2;
 
   membersByFragment.forEach((pList, id) => {
-    const feature = byId.get(id); if (!feature) return;
-    const rings = pList.slice().sort((a,b) => parseInt(String(a).replace('P',''),10) - parseInt(String(b).replace('P',''),10));
-    const centerLatLng = getFeatureCenter(feature);
+    const feature = byId.get(id);
+    if (!feature) return;
 
+    const centerLatLng = getFeatureCenter(feature);
+    const fragId = feature.properties.id || '';
+    const fragName = feature.properties.name || '';
+
+    // tri des patterns par numéro
+    const rings = pList
+      .slice()
+      .sort((a, b) => parseInt(String(a).replace('P', ''), 10) - parseInt(String(b).replace('P', ''), 10));
+
+    // préparation du HTML fuzzy pour le tooltip
+    const itemsHtml = rings
+      .map(pName => {
+        const pData = patterns[pName];
+        if (!pData) return '';
+        const size = (pData.elements || []).length;
+        const sim = computeFragmentPatternSimilarity(fragId, pName, byId);
+        return `<li>${pName} — ${size} fragments — sim. moy. avec ce fragment : ${sim.toFixed(2)}</li>`;
+      })
+      .join('');
+
+    const tipHtml = `
+      <div class="pt-title">${fragId}${fragName ? ' — ' + fragName : ''}</div>
+      <div class="pt-sub">Appartient aux patterns :</div>
+      <ul class="pt-list">
+        ${itemsHtml || '<li>Aucun pattern</li>'}
+      </ul>
+    `;
+
+    // un anneau par pattern
     rings.forEach((pName, idx) => {
-      const color  = colorForPattern(pName);
+      const color = colorForPattern(pName);
       const radius = BASE_RADIUS + idx * RING_SPACING;
       const pane = ensureRingPane(idx);
 
-      const fragId   = feature.properties.id || '';
-      const fragName = feature.properties.name || '';
-      const ringsSorted = rings.slice().sort((a,b) => parseInt(String(a).replace('P',''),10) - parseInt(String(b).replace('P',''),10)).join(', ');
-      const tipHtml = `
-        <div class="pt-title">${fragId}${fragName ? ' — ' + fragName : ''}</div>
-        <div class="pt-sub">Appartient aux patterns : ${ringsSorted}</div>
-      `;
+      const marker = L.circleMarker(centerLatLng, {
+        pane,
+        radius,
+        color,
+        weight: RING_WEIGHT,
+        fillOpacity: 0
+      });
 
-      const marker = L.circleMarker(centerLatLng, { pane, radius, color, weight: RING_WEIGHT, fillOpacity: 0 });
       marker.on('mouseover', function () {
         if (!this._tooltip) {
-          this.bindTooltip(tipHtml, { className:'pattern-tip', direction:'top', sticky:true, offset:[0,-6], opacity:1 }).openTooltip();
+          this.bindTooltip(tipHtml, {
+            className: 'pattern-tip',
+            direction: 'top',
+            sticky: true,
+            offset: [0, -6],
+            opacity: 1
+          }).openTooltip();
+        } else {
+          this.openTooltip();
         }
       });
-      marker.on('mouseout', function () { this.closeTooltip(); });
+
+      marker.on('mouseout', function () {
+        this.closeTooltip();
+      });
+
       marker.on('click', () => onPatternsMapFragmentClick(feature));
+
       marker.addTo(patternOverlayGroup);
     });
   });
 }
 
-// Clic sur fragment (carte patterns)
 function onPatternsMapFragmentClick(feature) {
-  if (unitCreation.active) { handleUnitSelection(feature); return; }
-  if (currentView !== 'patterns-map') { return showDetails(feature.properties); }
-  clearAllTabbedTabs();
-  closeSidebars();
-  const fProps = feature.properties || {};
-  const fragId = fProps.id || Math.random().toString(36).slice(2);
-  openTab({ id: `frag-${fragId}`, title: fProps.id || 'Fragment', kind: 'fragment', render: (panel) => renderFragmentPanel(panel, fProps) });
-  const pList = getPatternsForFragment(fragId);
-  pList.forEach(pName => {
-    const pData = patterns[pName]; if (!pData) return;
-    openTab({ id: `pattern-${pName}`, title: pName, kind: 'pattern', render: (panel) => renderPatternPanel(panel, pName, pData) });
-  });
+  if (unitCreation.active) {
+    handleUnitSelection(feature);
+    return;
+  }
+  openFragmentWithPatternsTabs(feature.properties || {});
 }
+
+
 
 
 /*==================================================
@@ -1956,7 +2918,7 @@ function openPatternEditor(options) {
     mode = 'create',
     patternKey = '',
     elements = [],
-    criteria = {},
+    criteria = {},          // ⇐ maintenant on passe des critères fuzzy
     name = patternKey,
     description = '',
     onSave = () => {},
@@ -1965,30 +2927,30 @@ function openPatternEditor(options) {
   } = options || {};
 
   const modal   = document.getElementById('save-pattern-modal');
-  // Toujours au-dessus de la liste + dernier dans le DOM (même z-index)
-modal.style.zIndex = '6000';
-document.body.appendChild(modal);
+  modal.style.zIndex = '6000';
+  document.body.appendChild(modal);
+
   const keyEl   = document.getElementById('sp-key');
   const nameEl  = document.getElementById('sp-name');
   const descEl  = document.getElementById('sp-desc');
   const listEl  = document.getElementById('sp-fragments');
   const countEl = document.getElementById('sp-frag-count');
-  const btnSave = document.getElementById('sp-save');
+  const btnSave   = document.getElementById('sp-save');
   const btnCancel = document.getElementById('sp-cancel');
 
-  // Titre et libellés
+  // Titre & labels
   const headTitle = modal.querySelector('.modal__head strong');
   headTitle.textContent = headerText || (mode === 'edit' ? 'Modifier ce pattern' : 'Enregistrer ce pattern');
   btnSave.textContent   = saveText   || (mode === 'edit' ? 'Enregistrer les modifications' : 'Enregistrer');
 
-  // Remplissage des champs
+  // Champs
   keyEl.value   = patternKey;
   nameEl.value  = (name || patternKey).trim();
   descEl.value  = description || '';
 
-  // Remplir la liste des fragments
+  // Liste des fragments membres
   countEl.textContent = String(elements.length);
-  const all = [...(dataGeojson||[]), ...(datamGeojson||[])];
+  const all = [...(dataGeojson || []), ...(datamGeojson || [])];
   const byId = new Map(all.map(f => [f.properties.id, f]));
   listEl.innerHTML = '';
   elements.forEach(id => {
@@ -1998,22 +2960,26 @@ document.body.appendChild(modal);
     listEl.appendChild(line);
   });
 
-  // Ouverture + handlers
-  function close(){ modal.style.display = 'none'; cleanup(); }
-  function cleanup(){
+  function close() {
+    modal.style.display = 'none';
+    cleanup();
+  }
+  function cleanup() {
     document.querySelector('#save-pattern-modal .modal__backdrop').onclick = null;
     btnCancel.onclick = null;
     btnSave.onclick = null;
   }
+
   document.querySelector('#save-pattern-modal .modal__backdrop').onclick = close;
   btnCancel.onclick = close;
+
   btnSave.onclick = () => {
     const payload = {
       patternKey,
       name: (nameEl.value || patternKey).trim(),
       description: (descEl.value || '').trim(),
       elements: elements.slice(),
-      criteria: criteria
+      criteria: criteria   // ⇐ on renvoie bien les critères fuzzy
     };
     onSave(payload);
     close();
@@ -2022,14 +2988,54 @@ document.body.appendChild(modal);
   modal.style.display = 'block';
 }
 
+
+
+/**
+ * Calcule des critères "moyens" fuzzy pour une liste d'IDs de fragments.
+ * Retourne un objet { cléFuzzy: valeurMoyenne } avec des nombres entre 0 et 1.
+ */
+function computeConsensusCriteriaForIds(ids) {
+  const all = [...(dataGeojson || []), ...(datamGeojson || [])];
+  const byId = new Map(all.map(f => [f.properties.id, f]));
+
+  const consensus = {};
+
+  ALL_FUZZY_KEYS.forEach((key, idx) => {
+    let sum = 0;
+    let count = 0;
+
+    ids.forEach(id => {
+      const f = byId.get(id);
+      if (!f) return;
+      const v = parseFuzzy(f.properties[key]);
+      if (v === null || Number.isNaN(v)) return;
+      sum += v;
+      count++;
+    });
+
+    if (count > 0) {
+      consensus[key] = sum / count;  // moyenne fuzzy
+    }
+  });
+
+  return consensus;
+}
+
+
+
+
 /* --- Création : garde le même nom de fonction publique --- */
-function openSavePatternModal(patternKey, patternData){
+function openSavePatternModal(patternKey, patternData) {
   const els = (patternData?.elements || []).slice();
+
+  // ⇨ On calcule les critères fuzzy "moyens" au moment du snapshot
+  const consensus = computeConsensusCriteriaForIds(els);
+
   openPatternEditor({
     mode: 'create',
     patternKey,
     elements: els,
-    criteria: patternData?.criteria || {},
+    criteria: consensus,
     name: (patternNames?.[patternKey]) || patternKey,
     description: '',
     onSave: (payload) => {
@@ -2039,14 +3045,15 @@ function openSavePatternModal(patternKey, patternData){
         savedAt: new Date().toISOString()
       };
       addSavedPattern(rec);
-      // Ouvre directement la fiche
+      // Ouvre directement la fiche du pattern enregistré
       openSavedPatternPanel(rec.uid);
     }
   });
 }
 
+
 /* --- Édition d’un pattern SAUVEGARDÉ (par UID) --- */
-function openEditSavedPatternModal(uid){
+function openEditSavedPatternModal(uid) {
   const items = loadSavedPatterns();
   const rec = items.find(x => x.uid === uid);
   if (!rec) return;
@@ -2055,11 +3062,15 @@ function openEditSavedPatternModal(uid){
     mode: 'edit',
     patternKey: rec.patternKey,
     elements: rec.elements || [],
-    criteria: rec.criteria || {},
+    criteria: rec.criteria || {},      // ⇐ on garde les critères fuzzy
     name: rec.name || rec.patternKey,
     description: rec.description || '',
     onSave: (payload) => {
-      updateSavedPattern(uid, { name: payload.name, description: payload.description });
+      // On ne modifie ici que nom + description (les critères peuvent rester)
+      updateSavedPattern(uid, {
+        name: payload.name,
+        description: payload.description
+      });
 
       // rafraîchir la fiche ouverte si elle existe
       const tabId = `saved-${uid}`;
@@ -2071,7 +3082,7 @@ function openEditSavedPatternModal(uid){
         Tabbed.openTabs.get(tabId).btn.firstChild.nodeValue = (updated.name || updated.patternKey);
       }
 
-      // si la liste est à l’écran, on la rafraîchit
+      // rafraîchir la liste si la modale est ouverte
       const listModal = document.getElementById('saved-patterns-list-modal');
       if (listModal && listModal.style.display === 'block') {
         openSavedPatternsListModal();
@@ -2079,6 +3090,7 @@ function openEditSavedPatternModal(uid){
     }
   });
 }
+
 
 
 
@@ -2154,7 +3166,7 @@ bDel.onclick = () => {
 }
 
 
-function openSavedPatternPanel(uid){
+function openSavedPatternPanel(uid) {
   const items = loadSavedPatterns();
   const rec = items.find(x => x.uid === uid);
   if (!rec) return;
@@ -2167,62 +3179,118 @@ function openSavedPatternPanel(uid){
   });
 }
 
-function renderSavedPatternPanel(panel, rec){
+function renderSavedPatternPanel(panel, rec) {
   panel.innerHTML = '';
 
+  /* --------------------------------------------
+     1) Titre + méta
+  -------------------------------------------- */
   const h2 = document.createElement('h2');
   h2.textContent = `${rec.name || rec.patternKey} — (enregistré)`;
+  panel.appendChild(h2);
+
   const meta = document.createElement('div');
   meta.style.cssText = 'color:#aaa;font-size:12px;margin-bottom:8px';
-  meta.textContent = `ID: ${rec.patternKey} • Fragments: ${rec.elements?.length || 0} • Sauvé: ${fmtDate(rec.savedAt)}${rec.updatedAt ? ' • Modifié: '+fmtDate(rec.updatedAt) : ''}`;
+  meta.textContent =
+    `ID: ${rec.patternKey} • Fragments: ${rec.elements?.length || 0} • Sauvé: ${fmtDate(rec.savedAt)}` +
+    (rec.updatedAt ? ` • Modifié: ${fmtDate(rec.updatedAt)}` : '');
+  panel.appendChild(meta);
 
+  /* --------------------------------------------
+     2) Description
+  -------------------------------------------- */
   const desc = document.createElement('p');
   desc.textContent = rec.description || '—';
+  panel.appendChild(desc);
 
-  // Critères (badges)
-  const critsWrap = document.createElement('div');
-  critsWrap.style.cssText = 'margin:6px 0 12px';
-  const critMask = criteriaDictToMask(rec.criteria || {});
-  const cTitle = document.createElement('div');
-  cTitle.innerHTML = '<strong>Critères du snapshot :</strong>';
-  const cBadges = badgesFromMask(critMask, 'badge-shared'); // même style "partagés"
-  critsWrap.append(cTitle, cBadges);
+  /* --------------------------------------------
+     3) CRITÈRES COMMUNS (moyenne fuzzy)
+        => comme dans renderPatternPanel
+  -------------------------------------------- */
+  const ids = rec.elements || [];
+  const consensus = computeConsensusCriteriaForIds(ids);
 
-  // Membres
+  const critBlock = document.createElement('div');
+  critBlock.className = 'pattern-crit-block';
+
+  const hCrit = document.createElement('h3');
+  hCrit.textContent = 'Critères communs';
+  critBlock.appendChild(hCrit);
+
+  const entries = Object.entries(consensus)
+    .filter(([k, v]) => v !== null && v >= 0.2)
+    .sort((a, b) => b[1] - a[1]);
+
+  if (!entries.length) {
+    const none = document.createElement('p');
+    none.textContent = 'Aucun critère commun significatif.';
+    none.style.color = '#aaa';
+    critBlock.appendChild(none);
+  } else {
+    entries.forEach(([k, v]) => {
+      const row = document.createElement('div');
+      row.className = 'crit-row';
+
+      const label = document.createElement('span');
+      label.className = 'crit-label';
+      label.textContent = k.replace(/_/g, ' ');
+
+      const val = document.createElement('span');
+      val.className = 'crit-value';
+      val.textContent = v.toFixed(2);
+
+      row.append(label, val);
+      critBlock.appendChild(row);
+    });
+  }
+
+  panel.appendChild(critBlock);
+
+  /* --------------------------------------------
+     4) Liste des fragments membres
+        => simple, même style que pattern normal
+  -------------------------------------------- */
   const list = document.createElement('div');
   list.className = 'pattern-members';
 
-  const all = [...(dataGeojson||[]), ...(datamGeojson||[])];
+  const all = [...(dataGeojson || []), ...(datamGeojson || [])];
   const byId = new Map(all.map(f => [f.properties.id, f]));
 
-  (rec.elements || []).forEach(id => {
+  ids.forEach(id => {
     const f = byId.get(id);
-    const row = document.createElement('div'); row.className = 'member-row';
-    const thumb = document.createElement('div'); thumb.className = 'member-thumb';
-    const first = cleanPhotoUrl(normalizePhotos(f?.properties?.photos)[0]);
-    if (first) thumb.style.backgroundImage = `url("${first}")`;
+    if (!f) return;
 
-    const title = document.createElement('div'); title.className = 'member-title';
-    title.textContent = f?.properties?.name ? `${id} — ${f.properties.name}` : id;
+    const row = document.createElement('div');
+    row.className = 'member-row';
 
-    const why = document.createElement('div'); why.className = 'member-why';
-    const fragMask = f ? getActiveMaskFor(f) : 0;
-    const { shared, different } = diffCriteria(critMask, fragMask);
+    // miniature
+    const thumb = document.createElement('div');
+    thumb.className = 'member-thumb';
+    const p = normalizePhotos(f.properties.photos)[0];
+    if (p) thumb.style.backgroundImage = `url("${p}")`;
 
-    const rowShared = document.createElement('div'); rowShared.className = 'crit-row'; rowShared.innerHTML = `<span class="crit-label">Partagés</span>`;
-    rowShared.appendChild(badgesFromMask(shared, 'badge-shared'));
-    const rowDifferent = document.createElement('div'); rowDifferent.className = 'crit-row'; rowDifferent.innerHTML = `<span class="crit-label">Différents</span>`;
-    rowDifferent.appendChild(badgesFromMask(different, 'badge-different'));
+    // nom
+    const right = document.createElement('div');
+    right.className = 'member-right';
 
-    why.append(rowShared, rowDifferent);
-    const right = document.createElement('div'); right.className = 'member-right'; right.append(title, why);
+    const title = document.createElement('div');
+    title.className = 'member-title';
+    title.textContent = f.properties.name || id;
+
+    right.append(title);
     row.append(thumb, right);
-    row.addEventListener('click', () => { if (f) showDetails(f.properties); });
+
+    row.addEventListener('click', () => showDetails(f.properties));
     list.appendChild(row);
   });
 
-    // Actions (un seul bouton "Modifier")
-  const actions = document.createElement('div'); actions.className = 'btn-row';
+  panel.appendChild(list);
+
+  /* --------------------------------------------
+     5) Actions
+  -------------------------------------------- */
+  const actions = document.createElement('div');
+  actions.className = 'btn-row';
 
   const bEdit = document.createElement('button');
   bEdit.className = 'tab-btn btn-sm';
@@ -2230,19 +3298,16 @@ function renderSavedPatternPanel(panel, rec){
   bEdit.onclick = () => openEditSavedPatternModal(rec.uid);
 
   const bDel = document.createElement('button');
-bDel.className = 'tab-btn btn-sm danger';
-bDel.textContent = 'Supprimer';
-bDel.onclick = () => {
-  // suppression immédiate, sans confirmation
-  deleteSavedPattern(rec.uid);
-  // fermer l’onglet courant s’il est ouvert
-  const id = `saved-${rec.uid}`;
-  if (Tabbed?.openTabs?.has(id)) closeTab(id);
-};
-
+  bDel.className = 'tab-btn btn-sm danger';
+  bDel.textContent = 'Supprimer';
+  bDel.onclick = () => {
+    deleteSavedPattern(rec.uid);
+    const idTab = `saved-${rec.uid}`;
+    if (Tabbed?.openTabs?.has(idTab)) closeTab(idTab);
+  };
 
   actions.append(bEdit, bDel);
-
-
-  panel.append(h2, meta, desc, critsWrap, actions, list);
+  panel.appendChild(actions);
 }
+
+

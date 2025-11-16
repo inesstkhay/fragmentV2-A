@@ -1,4 +1,4 @@
-id,type_geom,coordinates,name,description,photos,frequence_usage_aucun,frequence_usage_ponctuel,frequence_usage_regulier,frequence_usage_quotidien,mode_usage_prevu,mode_usage_detourne,mode_usage_creatif,intensite_usage_aucun,intensite_usage_faible,intensite_usage_moyenne,intensite_usage_forte,echelle_micro,echelle_meso,echelle_macro,origine_forme_institutionnelle,origine_forme_singuliere,origine_forme_collective,accessibilite_libre,accessibilite_semi_ouverte,accessibilite_fermee,visibilite_cachee,visibilite_visible,visibilite_exposee,acteurs_visibles_habitant,acteurs_visibles_institution,acteurs_visibles_collectif,acteurs_visibles_invisible,rapport_affectif_symbolique
+,type_geom,coordinates,name,description,usages,acteur_actif,initiateur,photos,PA_P1_intensitesoin,PA_P1_frequencegestes,PA_P1_degrecooperation,PA_P2_degretransformation,PA_P2_perrenite,PA_P2_autonomie,PA_P3_intensiteusage,PA_P3_frequenceusage,PA_P3_diversitepublic,PA_P3_conflitusage,DH_P1_degreinformalite,DH_P1_echellepratique,DH_P1_degremutualisation,DH_P2_degréorganisation,DH_P2_porteepolitique,DH_P2_effetspatial,DH_P3_attachement,DH_P4_intensiteflux,FS_P1_presenceinstitutionnelle,FS_P1_intensitecontrole,FS_P2_abandon,FS_P3_pressionfoncière
 M001,Polygon,"""coordinates"": [
           [
             [
@@ -22,7 +22,7 @@ M001,Polygon,"""coordinates"": [
               43.571228696738274
             ]
           ]
-        ],",Marché sauvage Reynerie,Description a remplir,https://i.postimg.cc/ZnGD44Ss/M001.jpg,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE
+        ],",Marché informel : Reynerie,"stands informels installés tous les matins vente d'objets divers, regroupement d'habitants et personnes extérieures, commerce noir interdit par la mairie. plainte d'habitants pour le ""bazar"".","vendre, acheter, discuter, marcher, installer, occuper","commercants informels, habitants, habitants extérieurs ",commercants informels,https://i.postimg.cc/ZnGD44Ss/M001.jpg,0,0,0,"0,75",0,1,"0,75","0,75","0,5",1,1,"0,75","0,25",null ,null ,null ,0,"0,25","0,5","0,5","0,5",0
 M002,Polygon,"""coordinates"": [
           [
             [
@@ -46,7 +46,7 @@ M002,Polygon,"""coordinates"": [
               43.571256308118535
             ]
           ]
-        ],",Marché sauvage reynerie: abandonné,Description a remplir,https://i.postimg.cc/PJpFgNB8/M002.jpg,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE
+        ],",Marché informel : Reynerie (abandonné),restes des stands informels abandonnés sur la place. habitants s'y baladent pour trouver des choses à récupérer.,"marcher, récupérer, discuter",aucun,commercants informels,https://i.postimg.cc/PJpFgNB8/M002.jpg,0,0,0,"0,25",0,1,"0,5","0,5","0,5",1,1,"0,75","0,25",null ,null ,null ,0,"0,25","0,5","0,5","0,5",0
 M003,Polygon,"""coordinates"": [
           [
             [
@@ -98,11 +98,11 @@ M003,Polygon,"""coordinates"": [
               43.570711318947076
             ]
           ]
-        ],",Marché ramadan Reynerie,Description a remplir,https://i.postimg.cc/43sqYfhr/M003.jpg,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE
+        ],",Marché Ramadan Reynerie,commerçants et certains habitants vendent de la nourriture l'après midi avant la coupure du jeune du ramadan.,"discuter, vendre, acheter, marcher","commercants, commercants informels, habitants, habitants extérieurs ","commercants, commercants informels",https://i.postimg.cc/43sqYfhr/M003.jpg,null,null,null,"0,75","0,25","0,75","0,75","0,5","0,5","0,25","0,5","0,5","0,25",null ,null ,null ,0,"0,25",0,0,null,null
 M004,Point,"""coordinates"": [
           1.4028801136182096,
           43.570744803717815
-        ],",Arbre comme porte affaires pour commerçant,Description a remplir,https://i.postimg.cc/9MNngyNh/M004.jpg,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE
+        ],",Arbre : Porte affaires pour commerçant,commercants utilisent les arbres pour accrocher des articles ou leurs affaires,"utiliser, accrocher, ",commercants informels,commercants informels,https://i.postimg.cc/9MNngyNh/M004.jpg,null,null,null,"0,25",0,1,"0,25",0,0,0,"0,5",0,0,null ,null ,null ,0,null,0,0,null,null
 M005,Polygon,"""coordinates"": [
           [
             [
@@ -126,27 +126,27 @@ M005,Polygon,"""coordinates"": [
               43.56579932741906
             ]
           ]
-        ],",Marché ramadan Bellefontaine,Description a remplir,https://i.postimg.cc/MTGLY955/M005.jpg,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE
+        ],",Marché Ramadan Bellefontaine,commerçants et certains habitants vendent de la nourriture l'après midi avant la coupure du jeune du ramadan.,"discuter, vendre, acheter, marcher","commercants, commercants informels, habitants, habitants extérieurs ","commercants, commercants informels",https://i.postimg.cc/MTGLY955/M005.jpg,null,null,null,"0,75","0,25","0,75","0,75","0,5","0,5","0,25","0,25","0,5","0,25",null ,null ,null ,0,"0,25",0,0,null,null
 M006,Point,"""coordinates"": [
           1.4069892970805142,
           43.57123226582058
-        ],",Squat Messager 1,Description a remplir,https://i.postimg.cc/yNj59MmW/M006.jpg,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+        ],",Squat Messager 1,squat à visée de logement dans une partie du tripode messager,"dormir, habiter, bricoler, aménager, occuper",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/yNj59MmW/M006.jpg,"0,25",0,0,"0,75","0,25",1,"0,25","0,75",0,"0,5",1,0,0,null ,null ,null ,0,0,0,"0,25",1,1
 M007,Point,"""coordinates"": [
           1.4066526086371596,
           43.57144253856384
-        ],",Détournement électriicé à Messager,Description a remplir,https://i.postimg.cc/8zmDKndg/M007.jpg,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+        ],",Détournement d'éléctricité à Messager,récupération de l'electricité dans les parties communes du tripode pour alimenter les squats. ,bricoler,habitants extérieurs,habitants extérieurs,https://i.postimg.cc/8zmDKndg/M007.jpg,"0,25",0,"0,25","0,25","0,5",1,null,null,null,"0,5",1,"0,5","0,25",null ,null,null ,0,0,0,0,1,1
 M008,Point,"""coordinates"": [
-          1.406497613730238,
-          43.57157419604789
-        ],",Squat Messager (a documenter),Description a remplir,,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+         1.4058336581169897,
+          43.57154549459332
+        ],",Squat Messager 2,squat à visée de logement dans une partie du tripode messager,"dormir, habiter, manger, s'habiller",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/xTpwft97/M008.jpg,0,0,0,"0,25","0,25",1,"0,25","0,75",0,"0,5",1,0,0,null ,null ,null ,0,0,0,"0,25",1,1
 M009,Point,"""coordinates"": [
           1.3966564832778658,
           43.564719484397415
-        ],",Squat Pigeonnier 1,Description a remplir,https://i.postimg.cc/cLS0cNnc/M009.jpg,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+        ],",Squat Pigeonnier 1,installation a visée de logement sous le pigeonnier,dormir,habitants extérieurs,habitants extérieurs,https://i.postimg.cc/cLS0cNnc/M009.jpg,null,null,null,"0,25",0,1,0,0,0,"0,25",1,0,0,null,null,null,0,null,0,0,"0,25",0
 M010,Point,"""coordinates"": [
           1.3961811989165938,
           43.56337760386177
-        ],",Squat Pigeonnier 2,Description a remplir,https://i.postimg.cc/dtdJd0L1/M010.jpg,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+        ],",Squat Pigeonnier 2,installation indéterminée a proximité du pigeonnier,s'assoeir,habitants extérieurs,habitants extérieurs,https://i.postimg.cc/dtdJd0L1/M010.jpg,null,null,null,"0,25",0,1,0,0,0,"0,25",1,0,0,null,null,null,0,null,0,0,"0,25",0
 M011,Polygon,"""coordinates"": [
           [
             [
@@ -170,7 +170,7 @@ M011,Polygon,"""coordinates"": [
               43.560263857238255
             ]
           ]
-        ],",Squat collège Bellefontaine,Description a remplir,,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+        ],",Squat : collège Bellefontaine,squat a visée de logement dans le collège de bellefontaine abandonné,"dormir, habiter, manger, s'habiller",habitants extérieurs,habitants extérieurs,,null,null,null,"0,25",0,1,0,"0,25",0,"0,25",1,"0,5","0,25",null,null,null,0,null,0,"0,5",1,1
 M012,Polygon,"""coordinates"": [
           [
             [
@@ -210,8 +210,8 @@ M012,Polygon,"""coordinates"": [
               43.57046803037639
             ]
           ]
-        ],",Jardin sur friche collège,Description a remplir,https://i.postimg.cc/gc1YnhcQ/M012.jpg,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE
-M013,Point,"""coordinates"": [
+        ],",Jardin maraîcher Badiou,culture de fruits et légumes en place d'un terrain post-démolition (collège de la Reynerie). vente sur place.,"cultiver, vendre, planter","associatifs, habitants",acteurs publics,https://i.postimg.cc/gc1YnhcQ/M012.jpg,"0,25","0,25",0,null,null,null,0,"0,25","0,5",0,0,1,"0,25",null,null,null,0,0,1,"0,75","0,5",1
+M013,Polygon,"""coordinates"": [
           [
             [
               1.4019082048677092,
@@ -234,7 +234,7 @@ M013,Point,"""coordinates"": [
               43.5682623346508
             ]
           ]
-        ],",Squat école Reynerie,Description a remplir,,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE
+        ],",Squat : école Reynerie,personnel de l'école offre un logement de nuit dans l'école Simone Veil à une famille qui est à la rue.,"dormir, habiter, manger, s'habiller",habitants extérieurs,"habitants, habitants extérieurs",,"0,25",0,"0,5",0,0,"0,75",null,null,null,null,1,0,"0,5","0,25","0,5",0,0,0,1,1,0,0
 M014,Polygon,"""coordinates"": [
           [
             [
@@ -258,4 +258,1724 @@ M014,Polygon,"""coordinates"": [
               43.56773196957732
             ]
           ]
-        ],",Jardins partagés Satié,Description a remplir,https://i.postimg.cc/VsJffgwX/M014.jpg,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE
+        ],",Jardins partagés : Satié,"jardin partagé organisé par la mairie mais très utilisé par les habitants de Satié. culture d'aliments divers et usage aussi récreatif (bancs, lieux de repos)","cultiver, discuter, s'asseoir, planter, se rencontrer",habitants,acteurs publics,https://i.postimg.cc/VsJffgwX/M014.jpg,"0,25","0,25",0,"0,25",1,"0,5","0,75",1,"0,5",0,0,"0,25",0,null,null,null,0,null,"0,25","0,5",0,0
+M015,Polygon,"""coordinates"": [
+          [
+            [
+              1.4055606502602416,
+              43.56856621864182
+            ],
+            [
+              1.4055606502602416,
+              43.568477872825014
+            ],
+            [
+              1.4060414102292214,
+              43.568477872825014
+            ],
+            [
+              1.4060414102292214,
+              43.56856621864182
+            ],
+            [
+              1.4055606502602416,
+              43.56856621864182
+            ]
+          ]
+        ],",Jardins partagés : Pyramide,jardin partagé organisé par la mairie utilisés majoritairement par les élèves des écoles/clae alentour. pas de culture des habitants.,"cultiver, discuter, s'asseoir, planter, apprendre",habitants,acteurs publics,https://i.postimg.cc/rwW8KzWV/M015.jpg,"0,25","0,25","0,5","0,25",1,"0,25","0,25","0,25","0,25",0,null,null,null,null,null,null,0,null,"0,25","0,5",0,0
+M016,Polygon,"""coordinates"": [
+          [
+            [
+              1.4028439423965722,
+              43.57397587590776
+            ],
+            [
+              1.4028439423965722,
+              43.57337574492573
+            ],
+            [
+              1.4034435108430614,
+              43.57337574492573
+            ],
+            [
+              1.4034435108430614,
+              43.57397587590776
+            ],
+            [
+              1.4028439423965722,
+              43.57397587590776
+            ]
+          ]
+        ],",Jardins partagés : Daurat,"jardin partagé inutilisé par la population, rarement par l'école primaire Daurat.",entretenir,habitants, acteurs publics,https://i.postimg.cc/jjbRNKQz/M016.jpg,"0,25","0,25",0,0,"0,75","0,25","0,25","0,25","0,25",0,0,"0,25","0,25",null,null,null,0,null,"0,5","0,25",0,0
+M017,Point,"""coordinates"": [
+          1.3978204274093287,
+          43.56420389988264
+        ],",Jeux enfants : Rochers paysagers,rochers paysagers sur lesquels les enfants jouent à sauter et à dessiner.,"sauter, dessiner, jouer, se rencontrer, discuter",habitants, acteurs publics,https://i.postimg.cc/VvVYbCD6/M017.jpg,null,null,null,null,null,null,"0,5","0,5",1,0,null,null,null,null,null,null,0,null,0,0,0,0
+M018,Polygon,"""coordinates"": [
+          [
+            [
+              1.3978367497960562,
+              43.561777538457505
+            ],
+            [
+              1.3981374882943953,
+              43.56165803126487
+            ],
+            [
+              1.3984188243099709,
+              43.56185310906008
+            ],
+            [
+              1.3982175235400405,
+              43.561935709377394
+            ],
+            [
+              1.3978246232443325,
+              43.56192692211491
+            ],
+            [
+              1.3978367497960562,
+              43.561777538457505
+            ]
+          ]
+        ],",Dalle Tintoret: Rodéo moto,rodéos moto sur la dalle par jeunes et extérieurs.,"rouler, se réunir, discuter",habitants,habitants,https://i.postimg.cc/WpWpyBTv/M018.jpg,null,null,null,null,null,null,"0,25","0,25",0,"0,5",null,null,null,null,null,null,0,null,0,0,0,0
+M019,Point,"""coordinates"": [
+          1.404219770121074,
+          43.5697369382965
+        ],",Portes peintes: Gluck,"peinture des portes des logements vides par les habitants dans le tripode Gluck avec pour mention ""ici on peut loger une famille""","peindre, se réunir, militer, discuter","habitants, associatifs, élèves de l'ISDAT","habitants, associatifs, élèves de l'ISDAT",https://i.postimg.cc/4N3CRrRD/M019.jpg,null,null,null,"0,25","0,5","0,75",null,null,null,null,null,null,null,1,1,"0,25",1,null,"0,5","0,5",1,1
+M021,Point,"""coordinates"": [
+          1.4069796582005836,
+          43.57116289274501
+        ],",Point de deal: Messager,point de deal ou les guetteurs attendent,"attendre, s'asseoir, discuter, vendre",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/ncNFFqXS/M021.png,null,null,null,"0,25",0,1,"0,25",1,0,"0,75",1,1,0,null,null,null,0,0,"0,25","0,75",1,1
+M022,Point,"""coordinates"": [
+          1.4043152402089163,
+          43.57065894360068
+        ],",Point de deal: Auriacombe,point de deal ou les guetteurs attendent. point de rencontre et de discussion de jeunes du quartier,"attendre, s'asseoir, discuter, vendre, acheter",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/qMNBH1vC/M022.jpg,null,null,null,"0,25",0,1,1,1,"0,5","0,75",1,1,0,null,null,null,0,0,"0,25","0,75",1,1
+M023,Point,"""coordinates"": [
+          1.3958693502353015,
+          43.56450506726708
+        ],",Point de deal: Pergaud,point de deal ou les guetteurs attendent,"attendre, s'asseoir, discuter, vendre, acheter",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/fytbCC3X/M023.jpg,null,null,null,0,0,1,"0,25",1,0,"0,75",1,1,0,null,null,null,0,0,"0,25","0,75",1,1
+M024,Point,"""coordinates"": [
+          1.4046198015010987,
+          43.57345203625269
+        ],",Épicerie solidaire: Varèse,épicerie solidaire ouverte au rez-de-chaussée du tripode varèse après sa rénovation,"se rencontrer, vendre, acheter","commerçants, habitants, habitants extérieurs","commercants, acteurs publics",,null,null,null,null,null,null,"0,25","0,5","0,5",0,0,"0,5","0,25",null,null,null,0,null,"0,25","0,5",0,0
+M025,Point,"""coordinates"": [
+          1.4027066399986268,
+          43.56859630140147
+        ],",TO7,local associatif très ancien ou se réunissent les habitants pour discuter et aide sociale depuis des décénnies,"se rencontrer, discuter, boire, faire des réunions, militer","associatifs, habitants, habitants extérieurs","associatifs, acteurs publics",https://i.postimg.cc/d3bVxCdf/M025.jpg,null,null,null,null,null,null,1,"0,75",1,0,null,null,null,"0,75","0,25",0,1,null,"0,25","0,25",0,0
+M026,Point,"""coordinates"": [
+          1.398147279731603,
+          43.56507820411653
+        ],",Local CGT,"local associatif de la CGT utilisé pour els réunions et évènements de militants, notamment du CPES","se rencontrer, discuter, faire des réunions, militer","associatifs, habitants, habitants extérieurs","associatifs, acteurs publics",https://i.postimg.cc/ZY2nRGgL/M026.jpg,null,null,null,null,null,null,"0,5","0,25","0,5",0,null,null,null,1,1,"0,25",0,null,"0,25","0,5",0,0
+M027,Point,"""coordinates"": [
+          1.3980635400139363,
+          43.570525379630766
+        ],",Lieu de street workout: Lac,"street workout organisé en extérieur sur les abords du Lac de la Reynerie, lieu de rencontre régulier des habitants jeunes divers du quartier","se rencontrer, faire de l'exercice, discuter",habitants,acteurs publics,https://i.postimg.cc/ncL8f6f5/M027.jpg,null,null,null,null,null,null,"0,25","0,5",1,0,null,null,null,null,null,null,0,0,0,0,0,0
+M029,Point,"""coordinates"": [
+          1.4014459871346503,
+          43.57408104951162
+        ],",Barbecue: Mirail université,lieu de barbecue et de rencontre très peu utilisé,"cuisiner, se rencontrer, manger",habitants,acteurs publics,https://i.postimg.cc/SKdjxJFX/M029.jpg,null,null,null,null,null,null,0,0,"0,5",0,null,null,null,null,null,null,0,null,0,0,0,0
+M030,Polygon,"""coordinates"": [
+          [
+            [
+              1.3977631354445919,
+              43.56404118400977
+            ],
+            [
+              1.3977631354445919,
+              43.56396839630975
+            ],
+            [
+              1.3980528995649024,
+              43.56396839630975
+            ],
+            [
+              1.3980528995649024,
+              43.56404118400977
+            ],
+            [
+              1.3977631354445919,
+              43.56404118400977
+            ]
+          ]
+        ],",Terrain de pétanque: Bellefontaine,nouveau terrain de pétanque peu utilisé par les habitants mais les habitants s'assoient sur les bancs et s'y rencontrent.,"se rencontrer, discuter, jouer","habitants, habitants extérieurs",acteurs publics,https://i.postimg.cc/rmps0MMf/M030.jpg,null,null,null,null,null,null,"0,25","0,5","0,5",0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M031,Polygon,"""coordinates"": [
+          [
+            [
+              1.4039727111860714,
+              43.56871952966475
+            ],
+            [
+              1.40410084869049,
+              43.56872468754233
+            ],
+            [
+              1.4040047455616786,
+              43.56880463459245
+            ],
+            [
+              1.4039727111860714,
+              43.56871952966475
+            ]
+          ]
+        ],",Décharge : Gluck,lieu de décharge de déchets divers,jeter,habitants,"acteurs publics, habitants",https://i.postimg.cc/FRnR08KN/M031.jpg,null,null,null,"0,25","0,25",1,null,null,null,null,null,null,null,null,null,null,0,null,0,0,1,1
+M032,Point,"""coordinates"": [
+          1.3984085550653447,
+          43.56233751761286
+        ],",Foodtruck: Bellefontaine,snack mobile utilisé par habitants de bellefontaine en période de beau temps. sans autorisation mais installé depuis plusieurs années,"se rencontrer, discuter, manger, s'asseoir",habitants,"habitants, commercants",https://i.postimg.cc/Nj15Zddk/M032.jpg,null,null,null,"0,5",1,"0,5","0,25","0,25","0,5",0,"0,5","0,25",0,null,null,null,0,null,0,0,0,0
+M033,Polygon,"""coordinates"": [
+          [
+            [
+              1.4020211077017848,
+              43.572161516595855
+            ],
+            [
+              1.4020211077017848,
+              43.572004793129054
+            ],
+            [
+              1.4026075675585048,
+              43.572004793129054
+            ],
+            [
+              1.4026075675585048,
+              43.572161516595855
+            ],
+            [
+              1.4020211077017848,
+              43.572161516595855
+            ]
+          ]
+        ],",Crèche abandonnée : Dalle Jean Gilles,ancienne crèche de la dalle Jean-Gilles. Abandonnée et laissée telle qu'elle depuis sa fermeture.,"fermer, abandonner, se dégrader",aucun,acteurs publics,https://i.postimg.cc/5NQHS4vG/M033.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,0,1,1,"0,5"
+M034,Point,"""coordinates"": [
+          1.4053929223890407,
+          43.56837475123197
+        ],",Assises: Coursives tripode,les habitants utilisent les remnbardes des coursives pour s'asseoir et discuter ,"s'asseoir, discuter, se rencontrer",habitants,aucun,https://i.postimg.cc/RCD6t63K/M034.jpg,null,null,null,null,null,null,"0,5","0,75",1,0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M036,LineString,"""coordinates"": [
+          [
+            1.3975899177840745,
+            43.56384902372628
+          ],
+          [
+            1.3982601977170646,
+            43.56386158465821
+          ],
+          [
+            1.3982717542680234,
+            43.563107924102724
+          ],
+          [
+            1.3975956960595681,
+            43.563103737073135
+          ],
+          [
+            1.3975899177840745,
+            43.563840649769844
+          ]
+        ],",Résidentialisation: André Maurois,nouvelle résidence résidentialisée par les acteurs publics dès sa construction,"fermer, restreindre",aucun,acteurs publics,https://i.postimg.cc/HkGrSq9L/M036.jpg,null,null,null,null,null,null,null ,null ,null ,null ,null ,null ,null ,null ,null ,null ,0,null,0,1,0,0
+M039,Point,"""coordinates"": [
+          1.402748751763312,
+          43.57029527587105
+        ],",Affichage: Violences policières,les militants du quartier se réunissent et accrochent une banderole contre les violences policières qui ont lieu dans le quartier,"afficher, militer, se réunir, revendiquer","habitants, associatifs, habitants extérieurs","habitants, associatifs, habitants extérieurs",https://i.postimg.cc/L5nJ7RWJ/M039.jpg,null,null,null,"0,25",0,1,null ,null ,null ,null ,null ,null ,null ,1,"0,5","0,25",0,null,0,0,0,0
+M040,Point,"""coordinates"": [
+          1.4029682303707887,
+          43.57109418700651
+        ],",Tag: Violences policières,les militants du quartier taguent contre les violences policières qui ont lieu dans le quartier,"afficher, militer, se réunir, revendiquer",aucun,"habitants, associatifs, habitants extérieurs",https://i.postimg.cc/BbkjfkWM/M040.jpg,null,null,null,"0,25",0,1,null ,null ,null ,null ,null ,null ,null ,1,"0,5","0,25",0,null,0,0,0,0
+M041,Point,"""coordinates"": [
+          1.398843348756543,
+          43.56589630290293
+        ],",Table : Marché Bellefontaine,les militants installent une table dans les marchés hebdomadaires pour sensibiliser contre les démolitions,"afficher, militer, se réunir, revendiquer, informer","habitants, associatifs, habitants extérieurs","habitants, associatifs, habitants extérieurs",https://i.postimg.cc/B6h8MtmW/M041.jpg,null,null,null,"0,25",0,1,null,null,null,0,null,null,null,1,"0,25",0,0,0,0,0,0,0
+M042,Polygon,"""coordinates"": [
+          [
+            [
+              1.4023590643228943,
+              43.57101803670503
+            ],
+            [
+              1.4026429485601,
+              43.570907483615144
+            ],
+            [
+              1.4026500456666895,
+              43.57104760319453
+            ],
+            [
+              1.40236261287572,
+              43.571164583510864
+            ],
+            [
+              1.4023590643228943,
+              43.57101803670503
+            ]
+          ]
+        ],",Assises: Place Abbal,les habitants se réunissent entre connaissances et discutent sur cet espace aménagé.,"s'asseoir, discuter, se réunir",habitants,acteur public,https://i.postimg.cc/B6ZLT2cc/M042.jpg,null,null,null,null,null,null,1,1,"0,5",0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M043,Polygon,"""coordinates"": [
+          [
+            [
+              1.4026965644656286,
+              43.570364322219376
+            ],
+            [
+              1.4026965644656286,
+              43.57008150851584
+            ],
+            [
+              1.4028118924372848,
+              43.57008150851584
+            ],
+            [
+              1.4028118924372848,
+              43.570364322219376
+            ],
+            [
+              1.4026965644656286,
+              43.570364322219376
+            ]
+          ]
+        ],",Commerces passage: Dalle Abbal,"lieu très fréquenté au milieu de la dalle Abbal, investi par commercants, habitants et extérieurs. lieu de rencontre, discussion","se réunir, discuter, marcher, acheter, vendre","habitants, commercants, habitants extérieurs",acteur public,https://i.postimg.cc/9fYwwLTQ/M043.jpg,null,null,null,1,1,"0,5",1,1,1,0,0,"0,75",0,null,null,null,0,"0,75",0,0,1,1
+M044,Polygon,"""coordinates"": [
+          [
+            [
+              1.3990575700672139,
+              43.565495414180305
+            ],
+            [
+              1.3990575700672139,
+              43.56541163683198
+            ],
+            [
+              1.3998023036699578,
+              43.56541163683198
+            ],
+            [
+              1.3998023036699578,
+              43.565495414180305
+            ],
+            [
+              1.3990575700672139,
+              43.565495414180305
+            ]
+          ]
+        ],",Commerces: Place Bellefontaine,"lieu très fréquenté par habitants et commercants, lieu de rencontre et discussion","se réunir, discuter, marcher, acheter, vendre","habitants, commercants, habitants extérieurs",acteur public,https://i.postimg.cc/3xpvY8xp/M044.jpg,null,null,null,null,null,null,1,1,1,0,0,"0,5",0,null,null,null,0,"0,75","0,25",0,0,0
+M045,Point,"""coordinates"": [
+          1.3982445938549404,
+          43.56606131750996
+        ],",Métro Bellefontaine,"lieu très fréquenté par habitants et commercants, lieu de rencontre et discussion","se réunir, discuter, attendre","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/0NsJNTz4/M045.jpg,null,null,null,null,null,null,1,1,1,1,null,null,null,null,null,null,0,"0,5","0,5",0,0,0
+M046,Point,"""coordinates"": [
+          1.399959337988463,
+          43.56564399463036
+        ],",Assise: Escaliers ,habitants se retrouvent et s'assoeient sur les marches pour attendre ou discuter,"attendre, discuter, s'asseoir","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/9Fs76RCC/M046.jpg,null,null,null,null,null,null,"0,5",1,1,0,null,null,null,null,null,null,0,0,0,0,0,0
+M048,Polygon,"""coordinates"": [
+          [
+            [
+              1.4031643178238369,
+              43.56794987730106
+            ],
+            [
+              1.4031643178238369,
+              43.56773210412854
+            ],
+            [
+              1.4034000509134046,
+              43.56773210412854
+            ],
+            [
+              1.4034000509134046,
+              43.56794987730106
+            ],
+            [
+              1.4031643178238369,
+              43.56794987730106
+            ]
+          ]
+        ],",Skateparc,skateparc implanté par la mairie en lieu d'un espace vide très peu utilisé par les habitants,"implanter, aménager, jouer",habitants,acteur public,https://i.postimg.cc/7Ps7NtRC/M048.jpg,null,null,null,null,null,null,0,0,"0,5",0,null,null,null,null,null,null,0,0,0,"0,25",0,0
+M049,Polygon,"""coordinates"": [
+          [
+            [
+              1.402988684428891,
+              43.572165066290324
+            ],
+            [
+              1.402988684428891,
+              43.57203944847589
+            ],
+            [
+              1.403186031751403,
+              43.57203944847589
+            ],
+            [
+              1.403186031751403,
+              43.572165066290324
+            ],
+            [
+              1.402988684428891,
+              43.572165066290324
+            ]
+          ]
+        ],",Parvis: nouvelle mairie,"aménagement public (bancs et jeux d'enfants) autour de la nouvelle mairie de la Reynerie, très peu utilisé par les habitants","s'asseoir, jouer",habitants,acteur public,https://i.postimg.cc/j2F7dCf6/M049.jpg,null,null,null,null,null,null,"0,25","0,25","0,5",0,null,null,null,null,null,null,0,"0,25","0,25",0,0,0
+M050,Polygon,"""coordinates"": [
+          [
+            [
+              1.3989599686849772,
+              43.57115574766391
+            ],
+            [
+              1.3995881935669559,
+              43.57112698284641
+            ],
+            [
+              1.3995391499886694,
+              43.57125388634955
+            ],
+            [
+              1.3990347017566478,
+              43.57126065452903
+            ],
+            [
+              1.3989599686849772,
+              43.57115574766391
+            ]
+          ]
+        ],",Base nautique,"base nautique et de loisirs neuve sur les bords du lac, utilisée par les habitants en été (très peu en hiver) et comme lieu pour faire jouer et sortir les enfants","jouer, se rencontrer, discuter, organiser des activités","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/RhFtBwWV/M050.jpg,null,null,null,null,null,null,"0,5","0,5",1,0,null,null,null,null,null,null,0,"0,25","0,5","0,5",0,0
+M051,Point,"""coordinates"": [
+          1.401089544122982,
+          43.56990489080141
+        ],",Jeu pour enfants (Poisson rouge),"nouvel aménagement aux abords du lac, jeu d'enfants utilisé par les familles","jouer, se rencontrer, discuter","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/jjHPQxVK/M051.jpg,null,null,null,null,null,null,"0,5","0,5","0,5",0,null,null,null,null,null,null,0,0,0,0,0,0
+M052,Polygon,"""coordinates"": [
+          [
+            [
+              1.4007330743893363,
+              43.567062316092006
+            ],
+            [
+              1.4008724652461524,
+              43.5669895973588
+            ],
+            [
+              1.4011428835079585,
+              43.56722795287956
+            ],
+            [
+              1.4010062804681809,
+              43.56730673119179
+            ],
+            [
+              1.4007330743893363,
+              43.567062316092006
+            ]
+          ]
+        ],",Place: Médiathèque Grand M,aménagement public sur le parvis de la médiathèse très peu utilisé par les habitants car minéral et peu ombragé,"s'asseoir, attendre","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/nhQvrK0X/M052.jpg,null,null,null,null,null,null,"0,25",1,1,0,null,null,null,null,null,null,0,"0,25","0,25",0,0,0
+M053,Polygon,"""coordinates"": [
+          [
+            [
+              1.397288748567206,
+              43.56543810373782
+            ],
+            [
+              1.397288748567206,
+              43.56527019450283
+            ],
+            [
+              1.398263204598834,
+              43.56527019450283
+            ],
+            [
+              1.398263204598834,
+              43.56543810373782
+            ],
+            [
+              1.397288748567206,
+              43.56543810373782
+            ]
+          ]
+        ],",Locaux: Pôle Bastide,"locaux restants de la dalle bastide, ancienne dalle de Bellefontaine, auparavant utilisés par la mairie mais vidés et inutilisés.","vider, attendre",aucun,acteur public,https://i.postimg.cc/NMQTd3YX/M053.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,"0,5",1,1,"0,25"
+M054,Polygon,"""coordinates"": [
+          [
+            [
+              1.4011500036605185,
+              43.56117254928378
+            ],
+            [
+              1.4001659312649792,
+              43.559937336738216
+            ],
+            [
+              1.4017390842004147,
+              43.559238959589834
+            ],
+            [
+              1.40270826124285,
+              43.56059830835582
+            ],
+            [
+              1.4011500036605185,
+              43.56117254928378
+            ]
+          ]
+        ],",Collège de Bellefontaine,ancien collège de bellefontaine abandonné et vacant avant sa démolition,"fermer, abandonner, se dégrader, attendre",aucun,acteur public,https://i.postimg.cc/tgQFx1M2/M054.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,"0,5",1,1,1
+M055,Polygon,"""coordinates"": [
+          [
+            [
+              1.4042658518644373,
+              43.56993060151268
+            ],
+            [
+              1.4038529348610211,
+              43.569408164077515
+            ],
+            [
+              1.4033968772756396,
+              43.56938583759097
+            ],
+            [
+              1.4033968772756396,
+              43.56926973972429
+            ],
+            [
+              1.4038406089800617,
+              43.56926527441749
+            ],
+            [
+              1.4042350371625503,
+              43.56876962328076
+            ],
+            [
+              1.4043891106712465,
+              43.568823207384526
+            ],
+            [
+              1.4039885195488466,
+              43.56933225398777
+            ],
+            [
+              1.4044137624331938,
+              43.569863622607784
+            ],
+            [
+              1.4042658518644373,
+              43.56993060151268
+            ]
+          ]
+        ],",Lieu abandonné: Tripode Gluck,"tripode gluck en démoltion, vide","démolir, fermer, attendre",aucun,acteur public,https://i.postimg.cc/bN5xqVHX/M055.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,1,1,1,1
+M056,Polygon,"""coordinates"": [
+          [
+            [
+              1.4042791371824421,
+              43.57001199155556
+            ],
+            [
+              1.404355712476871,
+              43.56997082799211
+            ],
+            [
+              1.4044149965764632,
+              43.56998335603603
+            ],
+            [
+              1.4045434454597512,
+              43.57012295406486
+            ],
+            [
+              1.4045582664853953,
+              43.570164117524314
+            ],
+            [
+              1.4044643999932305,
+              43.570232126656805
+            ],
+            [
+              1.4042791371824421,
+              43.57001199155556
+            ]
+          ]
+        ],",Place de prière: Auriacombe,lieu de prière des habitants musulmans aménagé par eux mêmes sur un morceau de dalle en face du tripode auriacombe lors du ramadan et maintenue depuis,"aménager, prier, rassembler, se réunir, maintenir, transformer","habitants, habitants extérieurs","habitants, habitants extérieurs",https://i.postimg.cc/qBjc5vNv/M056.jpg,"0,75","0,5","0,5","0,5","0,75",1,"0,25","0,5","0,25",0,null,null,null,null,null,null,"0,25",0,0,0,"0,5",0
+M058,Point,"""coordinates"": [
+          1.398712148715731,
+          43.56362109748545
+        ],",Statue : le Monument de Taras Chevtchenko,"Ancien monument dédié au poète ukrainien Taras Chevtchenko, retirée pour être déplacée dans Toulouse. Une plaque a été placée à l’emplacement d’origine. Les habitants mentionnent sa disparition comme une perte symbolique du lieu.","retirer, effacer, remplacer, afficher, commémorer",aucun,acteur public,https://i.postimg.cc/wTM58YNc/M058.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,"0,5","0,25",0,"0,5",null,"0,5",0,0,0
+M059,Polygon,"""coordinates"": [
+          [
+            [
+              1.3983231710089967,
+              43.56440347418521
+            ],
+            [
+              1.3983231710089967,
+              43.563929987814475
+            ],
+            [
+              1.3983678933067551,
+              43.563929987814475
+            ],
+            [
+              1.3983678933067551,
+              43.56440347418521
+            ],
+            [
+              1.3983231710089967,
+              43.56440347418521
+            ]
+          ]
+        ],",Arbres abattus,Arbres  ont été abattus par la mairie pour permettre l’aménagement d’une nouvelle piste cyclable le long de la route principale. Les habitants ont exprimé leur mécontentement face à la perte d’ombrage.,"abattre, aménager, transformer, contester, effacer",aucun,acteur public,,0,0,0,null,null,null,null,null,null,null,null,null,null,"0,25",0,0,"0,5",null,null,null,0,0
+M060,Point,"""coordinates"": [
+          1.395886170075073,
+          43.565784295654055
+        ],","Calocèdre abattu, chemin de l'Estang","calocèdre, grand arbre qui était un marqueur sur le quartier abattu par la mairie pour la rénovation des routes, très contesté par les habitants ","abattre, supprimer, transformer, contester, effacer",aucun,acteur public,https://i.postimg.cc/6qjd2Ykv/M060.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,"0,5","0,25",0,"0,75",null,null,null,0,0
+M061,Point,"""coordinates"": [
+          1.3988030883013778,
+          43.56436811514206
+        ],",Maison de projet renouvellement urbain : centre Albin Minville,"maison de projet (oblogatoire) installée par les acteurs publics dans un angle du centre social du quartier de bellefontaine, très rarement utilisé sauf à l'occasion de réunions  ","implanter, représenter, informer","habitants, habitants extérieurs, acteur public",acteur public,https://i.postimg.cc/d0rmHRyb/M061.jpg,null,null,null,null,null,null,0,0,0,0,null,null,null,null,null,null,0,null,1,1,0,0
+M062,LineString,"""coordinates"": [
+          [
+            1.402872222792098,
+            43.57084843060434
+          ],
+          [
+            1.4086993434291912,
+            43.570876069752416
+          ]
+        ],",Route de Kiev,axe majeur de circulation du quartier de la Reynerie,"circuler, marcher, se déplacer","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/9MBPVW11/M062.jpg,null,null,null,null,null,null,1,1,1,0,null,null,null,null,null,null,0,1,"0,25",0,0,0
+M063,LineString,"""coordinates"": [
+          [
+            1.406653804282854,
+            43.56843855536317
+          ],
+          [
+            1.4068282892270645,
+            43.568418724246385
+          ],
+          [
+            1.4069514550706685,
+            43.56843607647403
+          ],
+          [
+            1.4070643570935601,
+            43.568584809650446
+          ],
+          [
+            1.4075467566453312,
+            43.56859720406533
+          ],
+          [
+            1.4077965096048217,
+            43.568569936349405
+          ]
+        ],",Chemin : accès avenue de Reynerie,axe secondaire très utilisé de façon rythmique pour aller à la mosquée de l'autre coté de la route.,"circuler, marcher, se déplacer",habitants,acteur public,https://i.postimg.cc/PxHbBLbP/M063.jpg,null,null,null,null,null,null,"0,5","0,5","0,25",0,null,null,null,null,null,null,0,"0,5",0,0,0,0
+M065,Point,"""coordinates"": [
+          1.4056302870618254,
+          43.56829427673591
+        ],",Appropriation des balcons: fil à linge,installation définitive de fils à linge par les habitants sur leurs balcons,"étendre, suspendre, adapter, aménager, habiter",habitants,habitants,https://i.postimg.cc/7hY3ZpW4/M065.png,"0,25","0,25",0,"0,25",1,1,1,1,0,0,0,0,0,null,null,null,0,null,0,0,0,0
+M066,Point,"""coordinates"": [
+          1.4024771111279506,
+          43.57231643179418
+        ],",Appropriation des balcons: filet ,installation de filets sur leur balcons par les habitants,"protéger, sécuriser, adapter, entretenir",habitants,habitants,https://i.postimg.cc/y8wyypkh/M066.png,"0,25","0,25",0,"0,25",1,1,1,1,0,0,0,0,0,null,null,null,0,null,0,0,0,0
+M067,Point,"""coordinates"": [
+          1.4052671579437401,
+          43.568280136384146
+        ],",Appropriation des balcons : occultations ,installations d'occultations diverses sur leurs balcons par les habitants.,"occulter, isoler, personnaliser",habitants,habitants,https://i.postimg.cc/4N25mxGS/M067.png,"0,25","0,25",0,"0,25",1,1,1,1,0,0,0,0,0,null,null,null,0,null,0,0,0,0
+M068,Point,"""coordinates"": [
+          1.4045175582223521,
+          43.56798230402174
+        ],",Appropriation des balcons : cabanes,installation de structures de protection/de prolongation du logement sur leur balcon par les habitants,"construire, bricoler, prolonger, s’abriter, transformer",habitants,habitants,https://i.postimg.cc/DwWcs3yy/M068.jpg,"0,5","0,25",0,"0,5",1,1,1,1,0,0,0,0,0,null,null,null,0,null,0,0,0,0
+M069,Point,"""coordinates"": [
+          1.4059139428624121,
+          43.571488689267284
+        ],",Approproation des balcons : vérandas ,"installation de vérandas sur les balcons par les habitans, structures pour prolongerle logement","construire, bricoler, fermer, prolonger, habiter, transformer",habitants,habitants,https://i.postimg.cc/hPtsD7km/M069.png,"0,25","0,25",0,"0,5",1,1,1,1,0,0,0,0,0,null,null,null,0,null,0,0,0,0
+M070,Point,"""coordinates"": [
+          1.405880293310645,
+          43.56851870670167
+        ],",Squat: jardin partagé La Pyramide,cabane au sein du jardin partagé utilisé parfois comme abri par habitants extérieurs,"habiter, s'abriter, dormir",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/ryJg29Pc/M070.jpg,0,0,0,"0,5","0,25",1,0,0,0,"0,25",1,0,0,null,null,null,0,null,0,0,0,0
+M071,Point,"""coordinates"": [
+          1.406156024799543,
+          43.568532745395885
+        ],",Jeu: La pyramide,aménagement d'espace public utilisé comme jeu par les enfants du quartier et également symbolique de cette partie du quartier,"jouer, se recontrer, discuter",habitants,"habitants, architectes",https://i.postimg.cc/sxVcZB1t/M071.jpg,0,0,0,null,null,null,"0,5",1,1,0,null,null,null,null,null,null,"0,5","0,25",0,0,0,0
+M072,Polygon,"""coordinates"": [
+          [
+            [
+              1.4053896251066362,
+              43.569681932422355
+            ],
+            [
+              1.4054084288161732,
+              43.5694243583649
+            ],
+            [
+              1.4057155724557333,
+              43.5690267895547
+            ],
+            [
+              1.4058708698014755,
+              43.56908930054749
+            ],
+            [
+              1.4060882860852928,
+              43.56882925439007
+            ],
+            [
+              1.4063195065779723,
+              43.56892177093985
+            ],
+            [
+              1.4063781744641233,
+              43.56885175842842
+            ],
+            [
+              1.4067384568088528,
+              43.569001592718024
+            ],
+            [
+              1.4064064366980062,
+              43.56941505975297
+            ],
+            [
+              1.4062871169698496,
+              43.569373713177214
+            ],
+            [
+              1.4059084065303011,
+              43.569869870212585
+            ],
+            [
+              1.4053896251066362,
+              43.569681932422355
+            ]
+          ]
+        ],",École Jean Galia : abandonnée,ancienne école vacante avant sa démolition,"fermer, abandonner, se dégrader, attendre",aucun,acteur public,https://i.postimg.cc/L5NVkH1h/M072.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,"0,5",1,1,1
+M073,Point,"""coordinates"": [
+          1.4058131045790105,
+          43.569257402240254
+        ],",Mémorial Jean Galia,mémorial écrit sur la facade de l'école avant sa fermture indiquant ses dates d'ouverture,"commémorer, se souvenir, célébrer",aucun,habitants,https://i.postimg.cc/Hx0zx0Ww/M073.jpg,0,0,0,"0,25",1,"0,5",null,null,null,null,null,null,null,null,null,null,"0,25",null,"0,5",1,0,0
+M074,Polygon,"""coordinates"": [
+          [
+            [
+              1.4066318355572207,
+              43.57217696068932
+            ],
+            [
+              1.4071058966723058,
+              43.571983342977205
+            ],
+            [
+              1.40727321235903,
+              43.57221063327165
+            ],
+            [
+              1.4068084465607456,
+              43.57240425025353
+            ],
+            [
+              1.4066318355572207,
+              43.57217696068932
+            ]
+          ]
+        ],",Stade : Messager,stade au abord du tripode messager complètement abandonné et non maintenu par les institutions ,"abandonner, négliger","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/26NTr9Yj/M074.jpg,0,0,0,null,null,null,0,0,0,0,null,null,null,null,null,null,0,null,0,0,1,1
+M075,Polygon,"""coordinates"": [
+          [
+            [
+              1.4072349775905195,
+              43.56857360656318
+            ],
+            [
+              1.4066813448589812,
+              43.56795834968
+            ],
+            [
+              1.4071451993101505,
+              43.567782173643735
+            ],
+            [
+              1.4076876097550723,
+              43.5683974323272
+            ],
+            [
+              1.4072349775905195,
+              43.56857360656318
+            ]
+          ]
+        ],",Stade : Satié,stade aux abord de Satié encore maintenu et utilisé par les clubs de sport du quartier,"entretenir, utiliser, jouer, maintenir, se rencontrer","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/L87N0601/M075.jpg,0,0,0,null,null,null,"0,25","0,5","0,5",0,null,null,null,null,null,null,0,null,"0,25","0,25","0,5",0
+M076,LineString,"""coordinates"": [
+          [
+            1.398804773708008,
+            43.56737699180121
+          ],
+          [
+            1.3977027826616109,
+            43.56756386594304
+          ],
+          [
+            1.3976324428078328,
+            43.56862563983324
+          ],
+          [
+            1.3982420548759933,
+            43.569050344148934
+          ],
+          [
+            1.3986172007643063,
+            43.56906733225904
+          ],
+          [
+            1.3992619827593273,
+            43.56888895686154
+          ],
+          [
+            1.4002090679857133,
+            43.56870205003682
+          ],
+          [
+            1.4004430263465508,
+            43.568317816692996
+          ],
+          [
+            1.4006691860947171,
+            43.568114398048436
+          ],
+          [
+            1.400825158334925,
+            43.5680296400769
+          ],
+          [
+            1.4007939638872813,
+            43.567588896702716
+          ],
+          [
+            1.4003391911188032,
+            43.56758972457277
+          ],
+          [
+            1.4002696485418653,
+            43.567104166512934
+          ],
+          [
+            1.3990138098150737,
+            43.56732736754458
+          ]
+        ],",Zone Résidentialisée : Reynerie,"résidence bloquée au public extérieur, résidentialisée par la co-propriété","fermer, restreindre",aucun,acteur public,https://i.postimg.cc/q73jfV9Z/M076.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,0,1,0,0
+M077,LineString,"""coordinates"": [
+          [
+            1.4037344910545073,
+            43.572973574599814
+          ],
+          [
+            1.4036693312082207,
+            43.572770857046066
+          ],
+          [
+            1.4039644946876706,
+            43.57204541346033
+          ]
+        ],",Limites de l'entretien,"espace délimités entre lieux utilisés et lieux délaissés ou l'entretien par la mairie s'arrête et c'est visisble (entretien des sols, enlèvement des déchets...)","entretenir, nettoyer, cesser, négliger, délimiter",acteur public,acteur public,,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,"0,25","0,25",0,0
+M078,Point,"""coordinates"": [
+          1.4045666569675177,
+          43.5711293037202
+        ],",Point de deal: Poulenc,point de deal ou les guetteurs attendent,"attendre, s'asseoir, discuter, vendre, acheter","habitants, habitants extérieurs","habitants, habitants extérieurs",https://i.postimg.cc/nc3dB14T/M078.jpg,0,0,0,"0,5","0,25",1,"0,5","0,5","0,25",1,1,1,0,null,null,null,0,"0,25",0,"0,5",1,"0,5"
+M079,Point,"""coordinates"": [
+          1.4064961288806046,
+          43.571896563437946
+        ],",Jeu d'enfant abandonné: Messager,parc de jeux abandonné peu utilisé.,"jouer, s'asseoir, se rencontrer",aucun,acteur public,https://i.postimg.cc/9Fm8Dk7r/M079.jpg,0,0,0,null,null,null,0,0,0,0,null,null,null,null,null,null,0,null,0,0,1,1
+M080,Point,"""coordinates"": [
+          1.4062992503452278,
+          43.57162029551924
+        ],",Déchetterie : Messager,lieu de décharge sauvage aux abord du tripode messager,jeter,"habitants, habitants extérieurs","habitants, habitants extérieurs",https://i.postimg.cc/XNc17WXR/M080.jpg,0,0,0,"0,25",0,1,null,null,null,null,null,null,null,null,null,null,0,null,0,0,1,1
+M081,Point,"""coordinates"": [
+          1.4073017656582465,
+          43.57185883512051
+        ],",Déchetterie : Messager,lieu de décharge sauvage aux abord du tripode messager,jeter,"habitants, habitants extérieurs","habitants, habitants extérieurs",https://i.postimg.cc/vTz0PrpY/M081.jpg,0,0,0,"0,25",0,1,null,null,null,null,null,null,null,null,null,null,0,null,0,0,1,1
+M082,Point,"""coordinates"": [
+          1.4015165747737512,
+          43.5727525073477
+        ],",Jeu d'enfants : Jean Gilles,parc de jeux neuf et entretenu assez utilisé par les habutants,"jouer, s'asseoir, se rencontrer",habitants,acteur public,https://i.postimg.cc/Vv17BGZZ/M082.jpg,null,null,null,null,null,null,"0,5","0,5","0,75",0,null,null,null,null,null,null,0,null,0,0,0,0
+M083,Point,"""coordinates"": [
+          1.4024742775478956,
+          43.57260497016853
+        ],",Assise: canapés Jean Gilles,"installation de canapé dans la coursive du rez de chaissée de jean-gilles, utilisée ponctuellement par habitants avant leur retrait","s'assoeir, discuter, installer, ajouter","habitants, habitants extérieurs",habitants,https://i.postimg.cc/KztqTSfg/M083.jpg,0,0,0,"0,25",0,1,"0,25","0,25",0,0,null,null,null,null,null,null,0,null,0,0,0,0
+M084,Point,"""coordinates"": [
+          1.4023797574692196,
+          43.572414178450146
+        ],",Association: France Asie Culture et Amitié,local d'association utilisée par une communauté spécifique du quartier,"se réunir, discuter, s'organiser","habitants, habitants extérieurs, associatifs","habitants, associatifs",https://i.postimg.cc/pL16bByy/M084.jpg,null,null,null,null,null,null,"0,25",0,0,0,null,null,null,null,null,null,0,null,0,"0,5",0,0
+M085,Point,"""coordinates"": [
+          1.4016561577412858,
+          43.57204333848807
+        ],",Squat: Dalle Jean Gilles 1,"crèche abandonnée, utilisée comme abri par habitants extérieurs","habiter, s'abriter, dormir",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/vH2JY3GN/M085.jpg,0,0,0,"0,5","0,25",1,0,0,0,0,1,0,0,null,null,null,0,null,0,1,1,"0,5"
+M086,Point,"""coordinates"": [
+          1.402113532963341,
+          43.572134521354315
+        ],",Squat: Dalle Jean Gilles 2,"dalle de jean gilles, utilisée comme lieu de vie par habitants extérieurs","habiter, s'abriter, dormir",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/JhDd1BBx/M086.jpg,0,0,0,"0,5","0,25",1,0,0,0,0,1,0,0,null,null,null,0,null,0,1,1,"0,5"
+M087,Point,"""coordinates"": [
+          1.402184134507678,
+          43.572038890540085
+        ],",Squat: Dalle Jean Gilles 3,"crèche abandonnée, utilisée comme abri par habitants extérieurs","habiter, s'abriter, dormir",habitants extérieurs,habitants extérieurs,,0,0,0,"0,5","0,25",1,0,0,0,0,1,0,0,null,null,null,0,null,0,1,1,"0,5"
+M088,Point,"""coordinates"": [
+          1.401692993329533,
+          43.57202999464249
+        ],",Zone pour chats,"maintien par habitant d'une zone avec croquettes et lits pour chats, entretenu régulièrement sur la zone de la dalle Jean Gilles délaissée","nourrir, abriter, entretenir, protéger, soigner",habitants,habitants,https://i.postimg.cc/sg2NNLjt/M088.jpg,"0,25","0,25",0,"0,25","0,5",1,"0,25",0,0,0,1,0,"0,5",null,null,null,0,null,0,0,1,"0,5"
+M089,Point,"""coordinates"": [
+          1.4016070436232724,
+          43.5719543794616
+        ],",Voir et comprendre,"local de l'association voir et comprendre, utilisé comme lieu de réunion pour jeunes du quartier et de l'extérieur et actions sociales","se rencontrer, s'organiser, s'entraider","habitants, habitants extérieurs, associatifs",associatifs ,https://i.postimg.cc/28GtTYDQ/M089.jpg,"0,25","0,25",1,null,null,null,"0,5","0,75",1,0,null,null,null,null,null,null,0,null,"0,5","0,5",0,0
+M090,Point,"""coordinates"": [
+          1.4025309069558318,
+          43.571980550198504
+        ],",Tag : Festival racines,tag ancien faisant trace de l'ancien festival racines ayant lieu sur le quartier jusqu'à 2005.,"commémorer, rappeler, témoigner",habitants,"habitants, associatifs",https://i.postimg.cc/C5HQ3TfV/M090.jpg,null,null,null,"0,25",1,1,null,null,null,null,null,null,null,null,null,null,"0,5",null,null,null,0,0
+M091,Point,"""coordinates"": [
+          1.3997679315443747,
+          43.57381983811098
+        ],",Appropriation RDC : Bosquets,"résidence des bosquets appropriée par habitants car zone calme: installation de pots de fleurs, vérandas ","planter, aménager, décorer, entretenir, prolonger, s’approprier",habitants,habitants,https://i.postimg.cc/63ZShGWq/M091.jpg,"0,25","0,25",0,"0,5",1,1,"0,25",1,0,0,null,null,null,null,null,null,0,null,0,"0,25",0,0
+M092,LineString,"""coordinates"": [
+          [
+            1.4002077391882608,
+            43.57113298729536
+          ],
+          [
+            1.4002104781265814,
+            43.570843998974766
+          ],
+          [
+            1.400212093686747,
+            43.570798349064574
+          ],
+          [
+            1.400641832714399,
+            43.57080771315165
+          ],
+          [
+            1.4007016084434838,
+            43.571026598268276
+          ],
+          [
+            1.400699515098637,
+            43.571321104683705
+          ]
+        ],",Résidentialisation: Balcons du Lac,"grillages autour de la résidence du lac, aux abords du lac","fermer, restreindre",aucun,acteur public,https://i.postimg.cc/mkGnp2kw/M092.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,1,0,0
+M093,Polygon,"""coordinates"": [
+          [
+            [
+              1.4006922578315084,
+              43.5716525975036
+            ],
+            [
+              1.4006922578315084,
+              43.57146973796512
+            ],
+            [
+              1.4018006886451246,
+              43.57146973796512
+            ],
+            [
+              1.4018006886451246,
+              43.5716525975036
+            ],
+            [
+              1.4006922578315084,
+              43.5716525975036
+            ]
+          ]
+        ],",Dalle inaccessible : Balcons du Lac,dalle de la résidnece du lac innacessible au public ,"fermer, restreindre",habitants,acteur public,A ALLER FAIRE!! GRILLE,null,null,null,null,null,null,0,0,0,0,null,null,null,null,null,null,0,0,0,1,0,0
+M094,Polygon,"""coordinates"": [
+          [
+            [
+              1.4015150199153368,
+              43.57144424781694
+            ],
+            [
+              1.4015150199153368,
+              43.57132071721992
+            ],
+            [
+              1.4017562162142667,
+              43.57132071721992
+            ],
+            [
+              1.4017562162142667,
+              43.57144424781694
+            ],
+            [
+              1.4015150199153368,
+              43.57144424781694
+            ]
+          ]
+        ],",Parc résidentialisé,"espace de parc aux abords de la dalle de la résidence du lac, fermé au grand public, très rarement utilisé par associatiojs ou habitants","fermer, restreindre","habitants extérieurs, associatifs",acteur public,https://i.postimg.cc/HLRR5tCF/M094.jpg,null,null,null,null,null,null,0,0,0,0,null,null,null,null,null,null,0,0,"0,25",1,0,0
+M095,Polygon,"""coordinates"": [
+          [
+            [
+              1.400835711352272,
+              43.57125077679038
+            ],
+            [
+              1.400835711352272,
+              43.57120059708822
+            ],
+            [
+              1.401533373436564,
+              43.57120059708822
+            ],
+            [
+              1.401533373436564,
+              43.57125077679038
+            ],
+            [
+              1.400835711352272,
+              43.57125077679038
+            ]
+          ]
+        ],",Bancs: bords du lac,"bancs au bord du lac, fortement utilisés par habitants a toutes périodes. lieu de rencontre quotidien. ","s’asseoir, discuter, observer, se reposer, se rencontrer",habitants,acteur public,https://i.postimg.cc/ZqCXCMXr/M095.jpg,null,null,null,null,null,null,1,1,1,0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M096,Point,"""coordinates"": [
+          1.3981726072130414,
+          43.57252214132319
+        ],",Lieu de repos : Parc de la Reynerie,"parc de la reynerie, utilisé comme lieu de repos et de rencontre par habutanst et habitants extérieurs a usage modéré.","marcher, s’asseoir, discuter, se reposer, observer","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/0ytL5sXk/M096.jpg,null,null,null,null,null,null,"0,25",1,1,0,null,null,null,null,null,null,0,"0,25","0,25","0,5",0,0
+M097,Polygon,"""coordinates"": [
+          [
+            [
+              1.397894368759097,
+              43.57267709756843
+            ],
+            [
+              1.3977871790102085,
+              43.57246441731766
+            ],
+            [
+              1.3979467455675092,
+              43.572426470139874
+            ],
+            [
+              1.398050281119879,
+              43.5726338555867
+            ],
+            [
+              1.397894368759097,
+              43.57267709756843
+            ]
+          ]
+        ],",Chateau de La Reynerie,"chateau patrimonial de la reynerie, fermé au public sauf en fac d'évènements planifiés par les acteurs locaux.","préserver, fermer, valoriser, ouvrir ponctuellement, organiser","acteur public, associatifs",acteur public,https://i.postimg.cc/VLNyP3Pt/M097.jpg,null,null,null,null,null,null,"0,25","0,25","0,5",0,null,null,null,null,null,null,0,null,1,1,0,0
+M098,Point,"""coordinates"": [
+          1.3960964359434627,
+          43.567851974393164
+        ],",Squat Basso Cambo: zone industrielle,"zone délaissée au fond du géant basso cambo, utilisée comme lieu de vie par habitants extérieurs et décharge","habiter, s'abriter, dormir, jeter",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/ZKxGg3ry/M098.jpg,0,0,0,"0,25",0,1,0,0,0,0,1,0,0,null,null,null,0,null,0,0,1,1
+M099,Polygon,"""coordinates"": [
+          [
+            [
+              1.3943266271687662,
+              43.56880255196299
+            ],
+            [
+              1.3943266271687662,
+              43.56819775993924
+            ],
+            [
+              1.3960780769263579,
+              43.56819775993924
+            ],
+            [
+              1.3960780769263579,
+              43.56880255196299
+            ],
+            [
+              1.3943266271687662,
+              43.56880255196299
+            ]
+          ]
+        ],",Géant Basso Cambo : abandonné ,supermarché principal du grand mirail désaffecté et vidé avant démolition,"fermer, vider, abandonner, démolir, désaffecter","acteur public, commerçants",acteur public,https://i.postimg.cc/Gm3W12Qg/M099.jpg,0,0,0,null,null,null,0,1,1,0,null,null,null,null,null,null,0,"0,25","0,25",1,1,1
+M100,Polygon,"""coordinates"": [
+          [
+            [
+              1.3927997327858748,
+              43.56860615783245
+            ],
+            [
+              1.393465266023071,
+              43.56750915021894
+            ],
+            [
+              1.393783569522725,
+              43.56750918304823
+            ],
+            [
+              1.393811543328468,
+              43.56884765139836
+            ],
+            [
+              1.39371036227422,
+              43.56914089228431
+            ],
+            [
+              1.393579422086134,
+              43.56920126523059
+            ],
+            [
+              1.393246119789552,
+              43.569166766411456
+            ],
+            [
+              1.3931806496964043,
+              43.568744154274754
+            ],
+            [
+              1.3927997327858748,
+              43.56860615783245
+            ]
+          ]
+        ],",Parking Basso Cambo,"parking du géant basso cambo, extrèmement utilisé et fréquenté, hub logistique","stationner, circuler, se rencontrer, échanger, organiser","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/sD2FCtCY/M100.jpg,null,null,null,null,null,null,1,1,1,0,null,null,null,null,null,null,0,"0,5","0,25",0,1,1
+M101,Point,"""coordinates"": [
+          1.4025350228733657,
+          43.57115039447598
+        ],",Jeu enfants: Place Abbal,"jeux pour enfants inst&llés sur la place abbal très peu voir pas du tout utilisés, si ce n'est pas les vendeurs du marché sauvage comme assises.","implanter, détourner, s’asseoir, ignorer, réaffecter","habitants, habitants extérieurs",acteur public,https://i.postimg.cc/kMK3QLGs/M101.jpg,null,null,null,null,null,null,0,0,0,0,null,null,null,null,null,null,0,null,0,0,0,0
+M102,Point,"""coordinates"": [
+          1.4001166579805044,
+          43.571173154766626
+        ],","""Silence"" : Tag","tag ""silence "" écrit par habitants de la résidence du lac pour dissuader des désagréments liés aux rassemblements en bas de chez eux.","écrire, signaler, dissuader, réguler, marquer",habitants,habitants,https://i.postimg.cc/zXNm0pRr/M102.jpg,"0,25",0,0,"0,25",1,1,null,null,null,null,null,null,null,"0,5","0,5","0,25",0,null,0,0,0,0
+M103,Polygon,"""coordinates"": [
+          [
+            [
+              1.4021686136253209,
+              43.57056482874668
+            ],
+            [
+              1.4024576735641858,
+              43.5705779182112
+            ],
+            [
+              1.4026985568473265,
+              43.570804801812415
+            ],
+            [
+              1.407583741538815,
+              43.570822931424715
+            ],
+            [
+              1.4075559141851102,
+              43.570964062153706
+            ],
+            [
+              1.4027696093402824,
+              43.570930459629466
+            ],
+            [
+              1.4027788851244338,
+              43.571246322619544
+            ],
+            [
+              1.4021852349108883,
+              43.571246322619544
+            ],
+            [
+              1.4019997192193898,
+              43.570957341650654
+            ],
+            [
+              1.4019626160815903,
+              43.57071540302849
+            ],
+            [
+              1.4021686136253209,
+              43.57056482874668
+            ]
+          ]
+        ],",Marché Reynerie : Jeudi,"marché hebdomadaire du quartier de la Reynerie, réunissant habitants du quartier et du Grand Mirail voir a échelle métropolitaine. ","vendre, acheter, discuter, se rencontrer, circuler","habitants, habitants extérieurs, commerçants, associatifs","acteur public, commerçants",https://i.postimg.cc/SRWBmY33/M103.jpg,null,null,null,null,null,null,1,"0,25",1,0,0,1,0,null,null,null,0,1,"0,5",0,0,0
+M104,Polygon,"""coordinates"": [
+          [
+            [
+              1.3983451151458723,
+              43.564648498502464
+            ],
+            [
+              1.3983451151458723,
+              43.56449412730382
+            ],
+            [
+              1.399047786179068,
+              43.56449412730382
+            ],
+            [
+              1.399047786179068,
+              43.564648498502464
+            ],
+            [
+              1.3983451151458723,
+              43.564648498502464
+            ]
+          ]
+        ],",Marché Bellefontaine : Mercredi,"marché hebdomadaire du quartier de la Reynerie, réunissant habitants du quartier et du Grand Mirail voir a échelle métropolitaine. ","vendre, acheter, discuter, se rencontrer, circuler","habitants, habitants extérieurs, commerçants, associatifs","acteur public, commerçants",https://i.postimg.cc/C1fy6QNF/M104.jpg,null,null,null,null,null,null,1,"0,25",1,0,0,1,0,null,null,null,0,1,"0,5",0,0,0
+M105,Point,"""coordinates"": [
+          1.3942901011046729,
+          43.56460660109536
+        ],",Jardins partagés: Pergaud,"jardin partagé organisé par la mairie, peu utilisé ni entretenu par les habitants.","implanter, aménager, abandonner, désinvestir",aucun,acteur public,https://i.postimg.cc/mkfxxyX7/M105.jpg,"0,25",0,"0,5","0,25",1,"0,25",0,0,0,0,null,null,null,null,null,null,0,null,"0,25","0,25",0,0
+M106,Point,"""coordinates"": [
+          1.4067845534232788,
+          43.571476692637134
+        ],",Vitres cassées : Messager,"Vitres cassées dans tous les logements vides du tripode Messager. dissuasion squat, perpetré par police","casser, dissuader, dégrader, prévenir, évacuer",acteur public,acteur public ,https://i.postimg.cc/W4yL8v0W/M106.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,"0,5",1,1,1
+M107,Point,"""coordinates"": [
+          1.402818206429174,
+          43.57043535428198
+        ],",Marelle: Dalle Abbal,"marelle dessinée par des enfants à même le sol des escaliers de la dalle Abbal, utilisée par enfants","dessiner, jouer, s’approprier, se rencontrer",habitants,habitants,https://i.postimg.cc/zfvYTBHH/M107.jpg,null,null,null,"0,25",0,1,"0,25","0,25",0,0,null,null,null,null,null,null,0,0,0,0,"0,25",0
+M108,Point,"""coordinates"": [
+          1.406014571687166,
+          43.56854933555323
+        ],",Passage ouvert: Jardin partagé la pyramide,grillage découpé pour au jardin partagé de la pyramide,"ouvrir, couper, s'introduire","habitants, habitants extérieurs ",habitants extérieurs,https://i.postimg.cc/htpqJxvq/M108.jpg,null,null,null,"0,25",1,1,null,null,null,null,null,null,null,null,null,null,0,"0,25",0,1,0,0
+M109,Point,"""coordinates"": [
+          1.4053859062417757,
+          43.56838950211639
+        ],",Installation : RDC Satié,plaques de métal installées aux coursives du rez-de-chaussée de satié pour empêcher urines et squat.,dissuader,aucun,acteur public,https://i.postimg.cc/nhHJcTHk/M109.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,1,0,0
+M110,Point,"""coordinates"": [
+          1.402376371931382,
+          43.57029551117378
+        ],",Squat : patio dalle Abbal,"zone délaissée de la dalle abbal, utilisée comme lieu de vie par habitants extérieurs et décharge","habiter, s'abriter, dormir, jeter",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/sDPzrbRx/M110.jpg,0,0,0,"0,5","0,25",1,0,0,0,0,1,0,0,null,null,null,0,0,0,0,1,1
+M111,Point,"""coordinates"": [
+          1.4042331321195718,
+          43.5699087005014
+        ],",Point de deal : Gluck,"point de deal ou les guetteurs attendent et d'autres habitants extérieurs se réunissent, très investi","attendre, s'asseoir, discuter, vendre, acheter",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/J0ZLt2DT/M111.jpg,null,null,null,"0,25",0,1,"0,25",1,0,1,1,1,0,null,null,null,0,"0,25",0,"0,5",1,1
+M112,Point,"""coordinates"": [
+          1.3998514787876957,
+          43.5714629254484
+        ],",Accès bloqué: Parc ,grillage fermé et empêche un des accès au parc de la reynerie (l'accès le plus proche de la place abbal).,"fermer, restreindre",aucun,acteur public,https://i.postimg.cc/sDCzbsqb/M112.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,"0,25",1,0,0
+M113,LineString,"""coordinates"": [
+          [
+            1.3958492212599367,
+            43.56435211698013
+          ],
+          [
+            1.3956184351958711,
+            43.56376270476855
+          ],
+          [
+            1.3959475890908664,
+            43.563702392496424
+          ],
+          [
+            1.3961708083980682,
+            43.564256166548205
+          ]
+        ],",Résidentialisation : Pergaud,"résidentailisation récente du parking de la résidnece pergaud, bloquée au public extérieur, résidentialisée par les acteurs publics","fermer, restreindre",aucun,acteur public,https://i.postimg.cc/1tLSmQtn/M113.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,0,1,0,0
+M114,Point,"""coordinates"": [
+          1.3959944985843151,
+          43.56113046985854
+        ],",Point de deal: Tintoret,point de deal ou les guetteurs attendent,"attendre, s'asseoir, discuter, vendre, acheter",habitants extérieurs,habitants extérieurs,,null,null,null,"0,25",0,1,0,1,0,1,1,1,0,null,null,null,0,"0,25",0,"0,5","0,5","0,5"
+M115,Polygon,"""coordinates"": [
+          [
+            [
+              1.396477701288319,
+              43.56074721259691
+            ],
+            [
+              1.396477701288319,
+              43.56055856683125
+            ],
+            [
+              1.3966190224352601,
+              43.56055856683125
+            ],
+            [
+              1.3966190224352601,
+              43.56074721259691
+            ],
+            [
+              1.396477701288319,
+              43.56074721259691
+            ]
+          ]
+        ],",Jardin partagé : Jardin Orlaya,"jardin partagé organisé par la mairie, non utilisé ni entretnu par les habitants.","implanter, aménager, abandonner, désinvestir",aucun,acteur public,https://i.postimg.cc/SQMqZJTW/M115.jpg,0,0,0,null,null,null,0,0,0,0,null,null,null,null,null,null,0,0,0,"0,25",0,0
+M116,Point,"""coordinates"": [
+          1.3974579463378802,
+          43.559778979018375
+        ],",Point de deal: Tintoret intérieur,point de deal ou les guetteurs attendent,"attendre, s'asseoir, discuter, vendre, acheter",habitants extérieurs,habitants extérieurs,,null,null,null,"0,25",0,1,0,1,0,1,1,1,0,null,null,null,0,0,0,"0,5","0,5","0,5"
+M118,Polygon,"""coordinates"": [
+          [
+            [
+              1.396320271900322,
+              43.562480557091874
+            ],
+            [
+              1.3964562341965063,
+              43.562409950013745
+            ],
+            [
+              1.3965831323388045,
+              43.56241816014341
+            ],
+            [
+              1.3967689474753229,
+              43.56247398899498
+            ],
+            [
+              1.3965378115733813,
+              43.56261684493876
+            ],
+            [
+              1.396320271900322,
+              43.562480557091874
+            ]
+          ]
+        ],",Jeu d'enfant: Petit Bois,"lieu de rencontre dans le petit bois, structure et jeu d'enfants très largement utilsée par les familles","jouer, se rencontrer, discuter",habitants,acteur public,https://i.postimg.cc/PqVh7ZnM/M118.jpg,null,null,null,null,null,null,"0,75",1,"0,5",0,null,null,null,null,null,null,0,"0,25",0,"0,25",0,0
+M119,Point,"""coordinates"": [
+          1.4017076974923555,
+          43.56120004605552
+        ],",Dépot : Goya,lieu de décharge sauvage sur les abords du tripode goya promis à la démolition,jeter,"habitants, habitants extérieurs","habitants, habitants extérieurs",https://i.postimg.cc/7LZwX9d6/M119.jpg,0,0,0,"0,25",0,1,null,null,null,null,null,null,null,null,null,null,0,null,0,0,1,1
+M120,Point,"""coordinates"": [
+          1.4005309119559683,
+          43.56183184411185
+        ],",Modification lumières : bleues,habutants extérieurs et acteurs informels changent la couleur des luminaires des coursives pour plus de discrétion et créer une signalétique,"modifier, filtrer, signaler, adapter",aucun,"habitants, habitants extérieurs",https://i.postimg.cc/jSXRzm8m/M120.jpg,null,null,null,"0,25","0,5",1,0,0,0,"0,25",null,null,null,null,null,null,0,"0,25",0,0,"0,5","0,5"
+M121,Point,"""coordinates"": [
+          1.3975966636647854,
+          43.56168987469539
+        ],",Modification lumières : rouges,habutants extérieurs et acteurs informels changent la couleur des luminaires des coursives pour plus de discrétion et créer une signalétique,"modifier, filtrer, signaler, adapter",aucun,"habitants, habitants extérieurs",https://i.postimg.cc/sD5j2v5V/M121.jpg,null,null,null,"0,25","0,5",1,0,0,0,"0,25",null,null,null,null,null,null,0,"0,25",0,0,"0,5","0,5"
+M122,Polygon,"""coordinates"": [
+          [
+            [
+              1.3945627119380788,
+              43.56441318712615
+            ],
+            [
+              1.3945627119380788,
+              43.564303077682894
+            ],
+            [
+              1.3947212065847054,
+              43.564303077682894
+            ],
+            [
+              1.3947212065847054,
+              43.56441318712615
+            ],
+            [
+              1.3945627119380788,
+              43.56441318712615
+            ]
+          ]
+        ],",Jeu d'enfants: Pergaud,espace public aménagé abandonné peu utilisé.,"jouer, s'asseoir, se rencontrer",habitants,"acteur public, architecte ",https://i.postimg.cc/6pw94thC/M122.jpg,null,null,null,null,null,null,0,0,0,0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M123,Point,"""coordinates"": [
+          1.3948231208823643,
+          43.564373377332146
+        ],",Adaptation balcons : cabane,installation de structures de protection/de prolongation du logement sur leur balcon par les habitants,"construire, bricoler, prolonger, s’abriter, transformer",habitants,habitants,https://i.postimg.cc/CM3MYjBP/M123.jpg,"0,25","0,25",0,"0,5",1,1,1,1,0,0,0,0,0,null,null,null,0,null,0,0,0,0
+M124,Point,"""coordinates"": [
+          1.3936616281870897,
+          43.564225482697054
+        ],",Adaptation :  villas a Patio-Tourasse Lestang,"adaptation par les habitants des villas de leurs patios, toitures, et façades: murs ajoutés, vérandas, pergolas. ","aménager, adapter, habiter",habitants,habitants,https://i.postimg.cc/vDFNj8mh/M124.jpg,"0,25","0,25",0,"0,75",1,"0,5","0,25",1,0,0,0,0,0,null,null,null,0,null,0,"0,25",0,0
+M126,Polygon,"""coordinates"": [
+          [
+            [
+              1.3979974830867263,
+              43.56623113041945
+            ],
+            [
+              1.3982805913017273,
+              43.56617045194312
+            ],
+            [
+              1.3984254134440448,
+              43.56654521888703
+            ],
+            [
+              1.3981426654515303,
+              43.56660518138145
+            ],
+            [
+              1.3979974830867263,
+              43.56623113041945
+            ]
+          ]
+        ],",Les Imaginations Fertiles : Tiers Lieu,tiers lieu/coworking implanté a l'emplacement du chateau de clairfont,"se rencontrer, organiser des évènements, travailler","acteur public, associatifs, habitants","associatifs, acteurs publics",https://i.postimg.cc/RC6CjPFJ/M126.jpg,null,null,null,null,null,null,"0,25","0,25",0,0,null,null,null,null,null,null,0,null,1,1,0,0
+M127,Point,"""coordinates"": [
+          1.400314439114652,
+          43.565783661774816
+        ],",Vélo : hommage ,vélo mémoriel installé par habitants en mémoire d'une habitante décédée sur le rond-point ,"installer, commémorer",aucun,habitants,https://i.postimg.cc/Bb1zMPJt/M127.jpg,null,null,null,"0,25",1,"0,25",null,null,null,null,null,null,null,null,null,null,"0,25",null,0,0,0,0
+M128,Point,"""coordinates"": [
+          1.4014079094746137,
+          43.566273484605574
+        ],",Sous dalle : Clairfont,dessous de dalle utilisé par les jeunes et les enfants pour se réunir et se cacher,"se réunir, s'abriter, discuter, se cacher",habitants,architecte,https://i.postimg.cc/ydG5my4w/M128.jpg,0,0,0,null,null,null,"0,25","0,5","0,25",0,null,null,null,null,null,null,0,null,0,0,0,0
+M129,Point,"""coordinates"": [
+          1.3992922372071916,
+          43.563465605065176
+        ],",Passage muré,mur vitré du rez-dechaussée du tripode gauguin muré pour empécher les intrusions ,"fermer, bloquer",aucun,acteur public,https://i.postimg.cc/G2tVTSNF/M129.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,1,"0,25",0
+M130,Point,"""coordinates"": [
+          1.4001761940779431,
+          43.568768013616705
+        ],",Intrusion : Residence Reynerie,grillage découpé pour accès à la zone pavillonnaire résidentailisée de la Reynerie,"ouvrir, couper, s'introduire",aucun,habitants extérieurs,https://i.postimg.cc/d04g1KWQ/M130.jpg,null,null,null,"0,25",1,1,null,null,null,null,null,null,null,null,null,null,0,"0,25",0,1,0,0
+M131,LineString,"""coordinates"": [
+          [
+            1.3956742885938525,
+            43.57175424455781
+          ],
+          [
+            1.395970163590647,
+            43.57175424455781
+          ]
+        ],",Résidentialisation: Basso Cambo,"résidence bloquée au public extérieur, résidentialisée par les acteurs publics","fermer, restreindre",aucun,acteur public,https://i.postimg.cc/43Jrs3QF/M131.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,0,1,0,0
+M132,LineString,"""coordinates"": [
+          [
+            1.3949606348371333,
+            43.57254239536175
+          ],
+          [
+            1.3950143974417415,
+            43.57254528063078
+          ],
+          [
+            1.395010415026718,
+            43.57282515104134
+          ]
+        ],",Résidentialisation: Basso Cambo ,"résidence bloquée au public extérieur, résidentialisée par les acteurs publics","fermer, restreindre",aucun,acteur public,https://i.postimg.cc/RV0rxjxG/M132.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,0,1,0,0
+M133,LineString,"""coordinates"": [
+          [
+            1.3977403565963868,
+            43.57147322271163
+          ],
+          [
+            1.3969159168729846,
+            43.571680985500365
+          ]
+        ],",Chemin d'usage ,chemin d'usage tracé par les marcheurs reliant l'arrière du lac de la Reynerie à Basso Cambo.,"marcher, passer","habitants, habitants extérieurs","habitants, habitants extérieurs",https://i.postimg.cc/ht8HkmTd/M133.jpg,null,null,null,null,null,null,"0,25",1,1,0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M134,Polygon,"""coordinates"": [
+          [
+            [
+              1.3940743487542022,
+              43.56725152852218
+            ],
+            [
+              1.3940743487542022,
+              43.566868958348834
+            ],
+            [
+              1.3946943199656516,
+              43.566868958348834
+            ],
+            [
+              1.3946943199656516,
+              43.56725152852218
+            ],
+            [
+              1.3940743487542022,
+              43.56725152852218
+            ]
+          ]
+        ],",Mosquée de Basso Cambo,"lieu de culte principal du quartier, fréquenté toute l'année à intensités variables","prier, se rencontrer, discuter, se réunir","associatifs, habitants, habitants extérieurs","associatifs, habitants, habitants extérieurs",https://i.postimg.cc/J4XwQvhK/M134.jpg,null,null,null,null,null,null,1,1,"0,25",0,null,null,null,null,null,null,"0,25",null,"0,25","0,25",0,0
+M135,Point,"""coordinates"": [
+          1.399068581738419,
+          43.561619435431794
+        ],",Squat : sous dalle du Tintoret,lieu abrité utilisé parfois comme abri par habitants extérieurs,"habiter, s'abriter, dormir",habitant extérieur,habitant extérieur,https://i.postimg.cc/9QH6gbR2/M135.jpg,0,0,0,"0,25",0,1,0,0,0,"0,25",1,0,0,null,null,null,0,null,0,0,"0,5","0,5"
+M136,Point,"""coordinates"": [
+          1.3971804634691978,
+          43.56467504675189
+        ],",Jeu d'enfant :  Petit Bois,"lieu de rencontre en face de l'école de bellefontaine dans le petit bois, structure et jeu d'enfants","jouer, se rencontrer, discuter",habitants,acteur public,https://i.postimg.cc/ZY2tp4JC/M136.jpg,null,null,null,null,null,null,"0,5",1,"0,5",0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M137,LineString,"""coordinates"": [
+          [
+            1.402995060353959,
+            43.56360582425299
+          ],
+          [
+            1.4019763363717743,
+            43.56232454567214
+          ],
+          [
+            1.4018817405730601,
+            43.56216636124205
+          ],
+          [
+            1.4018849860813702,
+            43.56180472910876
+          ],
+          [
+            1.402793412999813,
+            43.5616337484264
+          ],
+          [
+            1.4042199538395153,
+            43.56279467749442
+          ],
+          [
+            1.404498265751954,
+            43.562808747509735
+          ],
+          [
+            1.4046792679317548,
+            43.56331405841914
+          ],
+          [
+            1.4032054692903273,
+            43.56364361529231
+          ],
+          [
+            1.4029982163562522,
+            43.563606070928984
+          ]
+        ],",Résidentialisation: Mûriers,résidentialisation de la co-propriété des muriers sur choix des propriétaires pour éviter intrusions extérieures dans la copropriété,"fermer, restreindre",aucun,"acteur public, habitants",https://i.postimg.cc/DZYVCKsp/M137.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,0,1,0,0
+M138,LineString,"""coordinates"": [
+          [
+            1.4072986195561157,
+            43.56284204211369
+          ],
+          [
+            1.4028917612799034,
+            43.56373568091587
+          ],
+          [
+            1.4001785836112504,
+            43.56576121312432
+          ]
+        ],",Allée de Bellefontaine,axe majeur de circulation du quartier,"circuler, marcher, se déplacer","habitants, habitants extérieurs",acteur public,,null,null,null,null,null,null,1,1,1,0,null,null,null,null,null,null,0,1,0,0,0,0
+M139,LineString,"""coordinates"": [
+          [
+            1.4063904510289547,
+            43.56748962096981
+          ],
+          [
+            1.4019511282095038,
+            43.56748962054306
+          ],
+          [
+            1.4014248865570096,
+            43.56732341469049
+          ],
+          [
+            1.4007097376456272,
+            43.56667814056328
+          ],
+          [
+            1.4003724032529306,
+            43.56597419726825
+          ]
+        ],",Avenue de Reynerie,axe majeur de circulation du quartier,"circuler, marcher, se déplacer","habitants, habitants extérieurs",acteur public,,null,null,null,null,null,null,1,1,1,0,null,null,null,null,null,null,0,1,0,0,0,0
+M140,Point,"""coordinates"": [
+          1.4028559585531752,
+          43.57054873150855
+        ],",Générateurs : Place Abbal,générateurs et objets electriques arrochés sur le mur de la dalle Abbal de façon bricolée,"installer, brancher, bricoler",commerçants,commerçants,https://i.postimg.cc/76L8MLCT/M140.jpg,"0,5","0,25",0,"0,5",1,"0,75",null,null,null,null,"0,5","0,5","0,75",null,null,null,0,null,0,0,"0,5",1
+M141,Point,"""coordinates"": [
+          1.4062086574065802,
+          43.571577214330176
+        ],",Incendies : Messager,incendies nombreux dans l'immeuble déclenchés par le squat et l'éléctricité,"bruler, risquer",aucun,habitants extérieurs,https://i.postimg.cc/L4Dd7mwf/M141.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,"0,5","0,5",0,0
+M142,Point,"""coordinates"": [
+          1.4022955207891243,
+          43.561381581581344
+        ],",Squat tente : Goya,campement à la lisère du quartier proche de l'immeuble Goya,"dormir, manger, s'abriter, aménager, occuper",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/PqynwDqj/M142.jpg,"0,25","0,25",0,"0,5",0,1,"0,25",0,0,"0,5",1,0,0,null,null,null,0,null,0,0,0,0
+M144,Point,"""coordinates"": [
+          1.3986660716034862,
+          43.563922000584114
+        ],",Ruisseau Albin Minville,enfants du quartier jouent au bord du ruisseau lorsque celui-ci est plein,"jouer, sauter, discuter",habitants,"acteur public, architectes",https://i.postimg.cc/Gpd1tKdK/M144.jpg,null,null,null,null,null,null,"0,25","0,5","0,25",0,null,null,null,null,null,null,0,null,0,0,0,0
+M145,Point,"""coordinates"": [
+          1.397693581189401,
+          43.5669717736545
+        ],",Dépot : Imaginations fertiles,lieu de décharge sauvage sur un chemin à la lisère de bellefontaine,jeter,"habitants, habitants extérieurs","habitants, habitants extérieurs",https://i.postimg.cc/4xzgXqkn/M145.jpg,0,0,0,"0,25",0,1,null,null,null,null,null,null,null,null,null,null,0,null,0,0,0,0
+M146,Point,"""coordinates"": [
+          1.401796755086906,
+          43.5672409120842
+        ],",Dalle coupée - Clairefontaine,dalle qui reliait dalle de clairefontiane à la reynerie découpée depuis années (?). ,"limiter, couper, réaménager",aucun,acteur public,https://i.postimg.cc/zX2sz0JJ/M146.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,null,0,1,0,0
+M147,Polygon,"""coordinates"": [
+          [
+            [
+              1.402836832362567,
+              43.56305830526884
+            ],
+            [
+              1.4028278247344872,
+              43.56294734489731
+            ],
+            [
+              1.4030007711961048,
+              43.56288337941402
+            ],
+            [
+              1.4031520993500806,
+              43.5629395123932
+            ],
+            [
+              1.402836832362567,
+              43.56305830526884
+            ]
+          ]
+        ],",Muriers: Place des voisins,place centrale de la coproproété ou a lieu chaque année la fête des voisins. enfants de la copropriété y jouent,"se réunir, discuter, s'asseoir, jouer, fêter",habitants,"acteurs publics, architectes",https://i.postimg.cc/wjKz8HrS/M147.jpg,0,0,0,null,null,null,"0,25",1,0,0,null,null,null,null,null,null,0,"0,25",0,"0,75",0,0
+M148,Point,"""coordinates"": [
+          1.4022879031331286,
+          43.562375841659644
+        ],",Muriers: Appropriation des patios,"les habitants de chaque maison à patio s'approprient l'espace d eleur patio de manière diverse et variée, entre plantations, terrasses et lieux de stockage.","décorer, planter, se réunir",habitants ,habitants,https://i.postimg.cc/654KmTMr/M148.jpg,"0,75","0,5",0,"0,5",1,"0,5",1,1,0,0,0,0,0,null,null,null,0,null,0,"0,25",0,0
+M149,Point,"""coordinates"": [
+          1.402459624944612,
+          43.562470526500505
+        ],",Muriers: Jardinets entrées,"habitants se sont coordonnés pour planter sur leur entrée de la végétation diverse, dans la limite d'une bande contenue","planter, entretenir, se concerter",habitants ,habitants,https://i.postimg.cc/J72mxj57/M149.jpg,"0,5","0,5","0,5","0,25",1,"0,5","0,5","0,5",0,0,0,0,0,null,null,null,0,null,0,"0,25",0,0
+M150,Point,"""coordinates"": [
+          1.397830703042672,
+          43.56162162974098
+        ],",Assises : marches Tintoret,habitants utilisent escaliers comme bancs et lieu d'assise pour se réunir et discuter,"s'asseoir, se rencontrer, discuter",habitants,architecte,,null,null,null,null,null,null,"0,5","0,5",1,0,null,null,null,null,null,null,0,"0,25",0,0,"0,5","0,5"
+M151,Point,"""coordinates"": [
+          1.3979046695799013,
+          43.56158813058167
+        ],",Epicerie solidaire  : Tintoret,épicerie soliadire installée en place d'un local réservé initialement aux locataires du tintoret pour y faire leurs réunions d'immeuble. retiré par le bailleur. pas encore ouverte.,"réaffecter, louer, transformer, retirer",commerçants,"commerçants, acteurs publics",https://i.postimg.cc/NFSc0wj2/M151.jpg,null,null,null,null,null,null,0,0,0,0,0,0,0,null,null,null,0,null,"0,25",1,0,0
+M152,Polygon,"""coordinates"": [
+          [
+            [
+              1.4029750632240052,
+              43.56275523368316
+            ],
+            [
+              1.4029750632240052,
+              43.56243285794193
+            ],
+            [
+              1.4030037656880268,
+              43.56243285794193
+            ],
+            [
+              1.4030037656880268,
+              43.56275523368316
+            ],
+            [
+              1.4029750632240052,
+              43.56275523368316
+            ]
+          ]
+        ],",Muriers : arbres plantés ,arbres plantés par femme de l'architecte original des muriers dans els premières années (années 70) habitante sur place,planter,aucun,habitant,https://i.postimg.cc/tJYbygpH/M152.jpg,"0,5","0,25",0,"0,5",1,1,null,null,null,null,null,null,null,null,null,null,0,null,0,0,0,0
+M153,Point,"""coordinates"": [
+          1.4030709836739277,
+          43.57077258902683
+        ],",Vente : Dalle Abbal,vente informelle de nourriture à proximité de la place abbal,"vendre, acheter, discuter, se rencontrer","habitants, habitants extérieurs, commerçants informels","habitants, habitants extérieurs, commerçants informels",https://i.postimg.cc/DZfFjgN0/M153.jpg,null,null,null,"0,5",0,1,"0,5","0,25","0,5",0,"0,75","0,25",0,null,null,null,0,null,0,0,"0,5",1
+M154,Point,"""coordinates"": [
+          1.3959897229737237,
+          43.56015213800015
+        ],",Point de deal: Tintoret,point de deal ou les guetteurs attendent. point de rencontre et de discussion de jeunes du quartier,"attendre, s'asseoir, discuter, vendre, acheter",habitants extérieurs,habitants extérieurs,https://i.postimg.cc/8CmNm3tx/M154.jpg,null,null,null,"0,25","0,5",1,"0,25",1,0,1,1,1,0,null,null,null,0,"0,25",0,"0,5","0,5","0,5"
+M155,Point,"""coordinates"": [
+          1.397035717205199,
+          43.56159684636185
+        ],",Banc d'époque abandonné: Tintoret,"banc d'époque de construction du quartier, inutilisé et non entretenu",-,aucun,architecte,https://i.postimg.cc/C1v0W8yN/M155.jpg,0,0,0,null,null,null,0,0,0,0,null,null,null,null,null,null,0,null,0,0,1,0
+M156,Polygon,"""coordinates"": [
+          [
+            [
+              1.4022253118139076,
+              43.571227591209976
+            ],
+            [
+              1.4022253118139076,
+              43.57115561638088
+            ],
+            [
+              1.4025517199321769,
+              43.57115561638088
+            ],
+            [
+              1.4025517199321769,
+              43.571227591209976
+            ],
+            [
+              1.4022253118139076,
+              43.571227591209976
+            ]
+          ]
+        ],",Conteneurs associatifs : Place Abbal,préfabriqués installés à la suite de l'annonce de la démolition de la dalle abbal pour loger associations choisies par la mairie sur la place Abbal.,"implanter, attribuer, substituer",associatifs,acteurs publics,https://i.postimg.cc/vmdbyGJL/M156.jpg,null,null,null,null,null,null,0,0,0,"0,5",null,null,null,null,null,null,0,null,1,1,0,0
+M157,Point,"""coordinates"": [
+          1.4026224507972245,
+          43.57071392055204
+        ],",Dalle Abbal: Parking à chariots,installation de chariots de transport autour de la place abbal lors du marché informel pour déplacement des marchandises,"transporter, stocker",commercants informels,commerçants informels,https://i.postimg.cc/cLchTmB7/M157.jpg,null,null,null,"0,25",0,1,"0,25",1,0,"0,5",1,"0,5",0,null,null,null,0,null,0,0,0,0
+M158,Point,"""coordinates"": [
+          1.3986752362075094,
+          43.56445309038597
+        ],",Escaliers : centre Alban Minville,"assise et installation des habitants sur les marches, lieu de rencontre et d'attente","s'asseoir, se retrouver, discuter, attendre","habitants, habitants extérieurs","acteurs publics, architectes",https://i.postimg.cc/RF1ZnWB0/M158.jpg,null,null,null,null,null,null,"0,25",1,1,0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M159,Polygon,"        ""coordinates"": [
+          [
+            [
+              1.4067347592304031,
+              43.56881116235044
+            ],
+            [
+              1.4066380421076587,
+              43.56874926174956
+            ],
+            [
+              1.4066896245728344,
+              43.56865349088409
+            ],
+            [
+              1.4067895655997518,
+              43.568569399266266
+            ],
+            [
+              1.4069427010452102,
+              43.5685880863027
+            ],
+            [
+              1.4069459249486727,
+              43.56869086489834
+            ],
+            [
+              1.4068363122098333,
+              43.568800650932104
+            ],
+            [
+              1.4067347592304031,
+              43.56881116235044
+            ]
+          ]
+        ],",Assises: Rue Georges Candilis,installation et assise a proximité d'un bâtiment et d'un stade par les habitants et les parents,"s'asseoir, se retrouver, discuter",habitants,acteur public,https://i.postimg.cc/cHzXwLMV/M159.jpg,null,null,null,null,null,null,"0,25","0,5",1,0,null,null,null,null,null,null,0,"0,25",0,0,0,0
+M160,LineString,"""coordinates"": [
+          [
+            1.4027961539497085,
+            43.57128018897669
+          ],
+          [
+            1.402814149909915,
+            43.57089627969157
+          ],
+          [
+            1.4027081737003186,
+            43.57085716426812
+          ],
+          [
+            1.402574203775913,
+            43.57067752274011
+          ],
+          [
+            1.402396243726372,
+            43.570592047953824
+          ],
+          [
+            1.4018963559474855,
+            43.57056162469544
+          ],
+          [
+            1.40188635819203,
+            43.57126715058814
+          ],
+          [
+            1.4027921548473046,
+            43.57128308639605
+          ]
+        ],",Place Abbal : fermée ,"installation de grillages tout autour de la place abbal par la mairie pour éviter l'installation du marché sauvage, surveillé par un gardin, maintenu environ 1 semaine","fermer, barrer, interdire",aucun,acteur public,https://i.postimg.cc/nhMKYJMx/M160.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,1,1,0,0
+M161,Point," ""coordinates"": [
+          1.4024630788450168,
+          43.57010952063692
+        ],",Pont fermé: Cambert,"plaques de métal installées par l'administration pour bloquer l'accès à Cambert depuis la Dalle Abbal et inversement. ont été instalées puis désinstallées sur plainte des habitants, puis réinstallées","condamner, obstruer, barrer, restreindre",aucun,acteur public,https://i.postimg.cc/zXx6G89Y/M161.jpg,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,1,"0,5",1
+M162,Point,"""coordinates"": [
+          1.404882468420908,
+          43.572267056226394
+        ],",Jeu : parc André Messager,parc de jeux rénové récemment par les services publics. peu utilisé.,"jouer, s'asseoir, se rencontrer",habitants,"architectes, acteurs publics",https://i.postimg.cc/mk3xwnZ3/M162.jpg,null,null,null,null,null,null,"0,5","0,5",1,0,null,null,null,null,null,null,0,null,0,0,"0,5",1
+M163,Point,"""coordinates"": [
+          1.3978608563760133,
+          43.56155519808638
+        ],",Réunion: Tintoret pour organisation anti-démolition,"réunion des habitants du tintoret pour s'organiser contre la démolition de l'immeuble, avec tables, chaises et maquettes. ","militer, se réunir, discuter",habitants,habitants,https://i.postimg.cc/fLBm9zmY/M163.jpg,"0,25",0,"0,5",null,null,null,null,null,null,null,null,null,null,1,"0,5",0,"0,25",null,0,"0,5",0,0
+M164,Point,"""coordinates"": [
+          1.3978898284597108,
+          43.56427225011018
+        ],",Réunion :  1er mai ,"réunion à l'occasion de la fête du travail pour porter la voix des luttes du quartier. habitants se réunissent, se restraurent et jouent. ","militer, se réunir, discuter, jouer","habitants, associatifs",associatifs,https://i.postimg.cc/G2GYXFWJ/M164.jpg,null,null,null,null,null,null,null,null,null,null,null,null,null,"0,75","0,25",0,0,null,0,0,0,0
+M165,Point,"""coordinates"": [
+          1.403259215649996,
+          43.56980622370307
+        ],",Point de rencontre: parking Gluck,habitants se réunissent dans le parking pour discuter à l'ombre des arbres suite à l'obstruction de passage vers la dalle abbal et ses cafés.,"se réunir, discuter, s'asseoir",habitants,habitants,https://i.postimg.cc/T1hxR0Tn/M165.png,0,0,0,"0,25",0,1,"0,25","0,75",0,0,null,null,null,null,null,null,0,"0,25",0,0,"0,5",1
+M166,Polygon,"""coordinates"": [
+          [
+            [
+              1.4034628127586757,
+              43.57040720044566
+            ],
+            [
+              1.4034628127586757,
+              43.57018593242836
+            ],
+            [
+              1.40370034263114,
+              43.57018593242836
+            ],
+            [
+              1.40370034263114,
+              43.57040720044566
+            ],
+            [
+              1.4034628127586757,
+              43.57040720044566
+            ]
+          ]
+        ],",Dalle Abbal : occupation atelier B,"occupation de l'atelier B de la dalle abbal initiée par collectif et les habitants, de quelques jours. expulsés par les forces de l'ordre à deux reprises. ","occuper, militer, se réunir, dormir, discuter, ouvrir","habitants, associatifs","habitants, associatifs",https://i.postimg.cc/3Rt75VQK/M166.jpg,"0,25",0,0,1,0,1,1,0,0,1,null,null,null,1,"0,5","0,75",0,null,1,1,1,1

@@ -66,8 +66,13 @@
 <div id="unit-view" class="view" style="display:none;"></div>
 
 <div id="similarity-controls" style="display:none; position: absolute; top: 90px; left: 50%; color: white; transform: translateX(-50%); background: rgb(0, 0, 0); padding: 10px; z-index: 1050; border: 1px solid #ccc;">
-    <label for="similarity-slider">Nombre de critères communs : <span id="slider-value">5</span></label><br>
-    <input type="range" id="similarity-slider" min="2" max="15" value="5" step="1"> </div>
+  <label for="similarity-slider">
+    Seuil de similarité : <span id="slider-value">0.75</span>
+  </label><br>
+  <!-- 50 → 0.50, 95 → 0.95, valeur initiale 75 → 0.75 -->
+  <input type="range" id="similarity-slider" min="50" max="95" value="75" step="1">
+</div>
+
 <div id="critical-view" style=" display: none; position: absolute;     top: 90px;     left: 50%;     transform: translateX(-50%);     width: 600px;    height: 600px;    background: white;    z-index: 100;    padding: 0;    box-sizing: border-box;     overflow: hidden;"> </div>
 
 <!-- PANNELS LATÉRAUX -->
@@ -99,38 +104,48 @@
 
    <!-- LEGENDE -->
 
-<div id="criteria-legend" style="position: absolute;  display: none; bottom: 60px; left: 10px; width: 240px; background: white; border: 1px solid #ccc; padding: 10px; font-size: 12px; z-index: 1050; overflow-y: auto; max-height: 60vh;">
-  <strong>Légende des critères</strong><br><br>
+<div id="criteria-legend" style="position: absolute; display:none; bottom: 60px; left: 10px; width: 260px; background: white; border: 1px solid #ccc; padding: 10px; font-size: 12px; z-index: 1050; overflow-y: auto; max-height: 60vh;">
+  <strong>Critères actifs</strong><br><br>
 
-  <em>Espace perçu (usage)</em><br>
-  <label><input type="checkbox" class="crit-dim" data-dim="frequence_usage" checked> Fréquence d’usage</label><br>
-  <small>ponctuel, régulier, quotidien</small><br>
+  <strong>PA — Pratiques actives</strong><br>
+  <em>Entretien/care</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P1_intensitesoin" checked> Intensité du soin</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P1_frequencegestes" checked> Fréquence des gestes</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P1_degrecooperation" checked> Degré de coopération</label><br><br>
+  <em>Appropriation spatiale</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P2_degretransformation" checked> Degré de transformation physique</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P2_perrenite" checked> Pérennité de l'installation</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P2_autonomie" checked> Degré d'autonomie</label><br><br>
+  <em>Appropriation sociale</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P3_intensiteusage" checked> Intensité d'usage</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P3_frequenceusage" checked> Fréquence d'usage</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P3_diversitepublic" checked> Diversité des publics</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="PA_P3_conflitusage" checked> Conflit d'usage</label><br><br>
 
-  <label><input type="checkbox" class="crit-dim" data-dim="mode_usage" checked> Mode d’usage</label><br>
-  <small>prévu, détourné, créatif</small><br>
+  <strong>DH — Dynamiques hybrides</strong><br>
+  <em>Economie de subsistance</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P1_degreinformalite" checked> Degré d'informalité</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P1_echellepratique" checked> Échelle de la pratique</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P1_degremutualisation" checked> Degré de mutualisation</label><br><br>
+  <em>Contestation et militance</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P2_degréorganisation" checked> Degré d'organisation</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P2_porteepolitique" checked> Portée politique</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P2_effetspatial" checked> Effet spatial</label><br><br>
+  <em>Symbolique</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P3_attachement" checked> Attachement</label><br><br>
+  <em>Mobilités</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="DH_P4_intensiteflux" checked> Intensité flux de déplacement </label><br><br>
 
-  <label><input type="checkbox" class="crit-dim" data-dim="intensite_usage" checked> Intensité d’usage</label><br>
-  <small>faible, moyenne, forte</small><br><br>
-
-  <em>Espace conçu</em><br>
-  <label><input type="checkbox" class="crit-dim" data-dim="echelle" checked> Échelle</label><br>
-  <small>micro, méso, macro</small><br>
-
-  <label><input type="checkbox" class="crit-dim" data-dim="origine_forme" checked> Origine de la forme</label><br>
-  <small>institutionnelle, singulière, collective</small><br>
-
-  <label><input type="checkbox" class="crit-dim" data-dim="accessibilite" checked> Accessibilité</label><br>
-  <small>libre, semi-ouverte, fermée</small><br>
-
-  <label><input type="checkbox" class="crit-dim" data-dim="visibilite" checked> Visibilité</label><br>
-  <small>caché, visible, exposé</small><br><br>
-
-  <em>Espace vécu (expérience)</em><br>
-  <label><input type="checkbox" class="crit-dim" data-dim="acteurs_visibles" checked> Acteurs visibles</label><br>
-  <small>habitant·e, institution, collectif, invisible</small><br>
-
-  <label><input type="checkbox" class="crit-dim" data-dim="rapport_affectif_symbolique" checked> Rapport affectif / symbolique</label><br>
+  <strong>FS — Forces structurantes</strong><br>
+  <em>Cadres de gouvernance</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="FS_P1_presenceinstitutionnelle" checked> Degré de présence institutionnelle</label><br>
+  <label><input type="checkbox" class="crit-key" data-key="FS_P1_intensitecontrole" checked> Intensité du contrôle</label><br>
+  <em>Gestion de la vacance</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="FS_P2_abandon" checked> Degré d'abandon</label><br>
+  <em>Economie de marché</em><br>
+  <label><input type="checkbox" class="crit-key" data-key="FS_P3_pressionfoncière" checked> Pression foncière</label><br>
 </div>
+
 
 
 <button id="toggle-legend-btn" style="
