@@ -853,3 +853,126 @@ input[type="range"] {
   stroke:#ff0;
   stroke-width:2px;
 }
+
+
+/* --- Miniatures Patterns (vignettes sur la carte) --- */
+
+.frag-thumb-ic {
+  width: 56px !important;
+  height: 42px !important;
+  overflow: hidden;
+  transform: translate(-28px, -21px); /* centre exact */
+}
+
+/* L'image intérieure */
+.frag-thumb {
+  width: 56px;
+  height: 42px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 0 4px rgba(0,0,0,0.35);
+}
+
+/* placeholder gris */
+.frag-thumb.--placeholder {
+  background: #444;
+}
+
+/* Hover dim */
+.frag-thumb.dim {
+  opacity: 0.25;
+}
+
+/* Sticky (bord blanc autour) */
+.frag-thumb.--active {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Analogies */
+#analogies-view .tab-btn.btn-sm {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+#analogies-view .tab-btn.primary {
+  background: rgb(0, 0, 0);
+  color: #fff;
+  border: 1px solid rgb(0, 0, 0);
+}
+#analogies-view .tab-btn.danger {
+  background: #700;
+  color: #fff;
+  border: 1px solid #400;
+}
+#analogies-view .anal-cell img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+#analogies-view .anal-cell .note {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+#analogies-view .anal-thumb {
+  cursor: grab;
+  user-select: none;
+}
+#analogies-view .anal-thumb:active {
+  cursor: grabbing;
+}

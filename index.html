@@ -30,9 +30,13 @@
 
 <!-- Sous-onglets : visible UNIQUEMENT quand "Patterns" est actif -->
 <div id="subnav-patterns" class="subnav subnav--inactive">
-  <button class="tab-btn sub-tab" data-sub="patterns-map">Carte</button>
-  <button class="tab-btn sub-tab" data-sub="proxemic">Proxémie</button>
-  <button class="tab-btn sub-tab" data-sub="gallery">Galerie</button>
+      <button class="tab-btn sub-tab" data-sub="patterns-map">Carte</button>
+      <button class="tab-btn sub-tab" data-sub="proxemic">Proxémie</button>
+      <button class="tab-btn sub-tab" data-sub="gallery">Galerie</button>
+      <button class="tab-btn sub-tab" data-sub="gallery-compose">
+        Composition
+      </button>
+      <button class="tab-btn sub-tab" data-sub="analogies">Analogies</button>
 
   <button id="saved-patterns-list-btn" class="tab-btn sub-action">Liste des Patterns enregistrés</button>
   <button id="create-unit-btn" class="tab-btn sub-action">Créer une Unité de Projet</button>
@@ -62,6 +66,430 @@
 <div id="proxemic-view" class="view" style="display:none;"></div>
 <!-- Vue galerie existante -->
 <div id="gallery-view" class="view" style="display:none; position: absolute; top: 55px; left: 10px; /* pour ne pas passer sous les filtres */ right: 0; bottom: 0; background: white; overflow-y: auto; z-index: 100;     padding: 80px;     box-sizing: border-box; "></div>
+
+
+
+<!-- Vue composition -->
+    <div
+      id="gallery-compose-view"
+      class="view"
+      style="
+        display: none;
+        position: absolute;
+        top: 85px; /* sous la barre */
+        left: 10px; /* aligne avec tes autres vues */
+        right: 0;
+        bottom: 40px; /* marge pour la fine barre noire */
+        background: white;
+        z-index: 100;
+        padding: 12px 16px 16px 150px;
+        box-sizing: border-box;
+        overflow: hidden; /* le host ne scrolle pas */
+        min-height: 0; /* autorise le shrink interne */
+      "
+    ></div>
+
+    <!-- Vue "Analogies" (nouvelle) -->
+    <div
+      id="analogies-view"
+      class="view"
+      style="
+        display: none;
+        position: absolute;
+        top: 85px;
+        left: 10px;
+        right: 0;
+        bottom: 40px;
+        background: #fff;
+        z-index: 100;
+        padding: 12px 16px 16px 150px; /* place la rail à gauche */
+        box-sizing: border-box;
+        overflow: hidden; /* on scrolle dans les boîtes internes */
+        min-height: 0;
+      "
+    >
+      <!-- RAIL CATALOGUE FRAGMENTS (à gauche) -->
+      <aside
+        id="anal-rail"
+        style="
+          position: absolute;
+          inset: 85px auto 10px 0px;
+          width: 130px;
+          background: #0b0b0b;
+          color: #eee;
+          border: 1px solid #ffffff;
+          border-radius: 0px;
+          padding: 8px;
+          box-sizing: border-box;
+          overflow: auto;
+          z-index: 101;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 8px;
+          "
+        >
+          <strong
+            style="
+              font-family: &quot;Consolas&quot;, monospace;
+              font-size: 12px;
+            "
+            >Fragments</strong
+          >
+        </div>
+        <input
+          id="anal-rail-search"
+          type="text"
+          placeholder="Rechercher…"
+          style="
+            width: 80%;
+            padding: 6px 8px;
+            font-size: 12px;
+            background: #151515;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 0px;
+            margin-bottom: 8px;
+          "
+        />
+        <div id="anal-rail-list" style="display: grid; gap: 6px">
+          <!-- vignettes des fragments injectées par JS (draggables) -->
+        </div>
+      </aside>
+
+      <!-- BARRE D’ACTIONS EN HAUT -->
+      <div
+        id="anal-toolbar"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          height: 40px;
+          min-height: 40px;
+          margin-bottom: 10px;
+        "
+      >
+        <input
+          id="anal-title-input"
+          type="text"
+          placeholder="Titre de la carte d’analogies"
+          style="
+            flex: 1;
+            min-width: 180px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: &quot;Consolas&quot;, monospace;
+          "
+        />
+        <button
+          id="anal-new-btn"
+          class="tab-btn"
+          style="background: #000; color: #fff; border: 1px solid #fff"
+        >
+          Nouvelle
+        </button>
+        <button id="anal-save-btn" class="tab-btn primary">Enregistrer</button>
+        <button id="anal-open-btn" class="tab-btn">Ouvrir</button>
+        <button id="anal-export-btn" class="tab-btn">Exporter</button>
+      </div>
+
+      <!-- SURFACE DE TRAVAIL : QUADRANT 2x2 -->
+      <div
+        id="anal-board-wrap"
+        style="height: calc(100% - 50px); min-height: 0; overflow: auto"
+      >
+        <div
+          id="anal-board"
+          style="
+            margin: 0 auto;
+            width: 75vw;
+            max-width: none;
+            box-sizing: border-box;
+            min-height: 520px;
+            aspect-ratio: 4 / 3;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+          "
+        >
+          <!-- cellule 1 -->
+          <div
+            class="anal-cell"
+            data-slot="0"
+            style="
+              position: relative;
+              border: 1px dashed #bbb;
+              border-radius: 10px;
+              padding: 10px;
+              background: #fafafa;
+              min-height: 250px;
+              overflow: hidden;
+            "
+          >
+            <div
+              class="anal-cell-tools"
+              style="
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                display: flex;
+                gap: 6px;
+                z-index: 100;
+              "
+            >
+              <button
+                class="anal-cell-import tab-btn btn-sm"
+                title="Importer une image"
+              >
+                Importer
+              </button>
+              <button
+                class="anal-cell-clear tab-btn btn-sm danger"
+                title="Vider la case"
+              >
+                Vider
+              </button>
+            </div>
+            <div
+              class="anal-cell-drop"
+              style="
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 16px;
+                color: #777;
+                pointer-events: none;
+              "
+            >
+              Glisser un fragment ici, <br />
+              coller une image (Ctrl/Cmd+V) ou cliquer “Importer”.
+            </div>
+            <div
+              class="anal-cell-content"
+              style="
+                position: absolute;
+                inset: 0;
+                padding: 12px;
+                overflow: auto;
+              "
+            ></div>
+          </div>
+
+          <!-- cellule 2 -->
+          <div
+            class="anal-cell"
+            data-slot="1"
+            style="
+              position: relative;
+              border: 1px dashed #bbb;
+              border-radius: 10px;
+              padding: 10px;
+              background: #fafafa;
+              min-height: 250px;
+              overflow: hidden;
+            "
+          >
+            <div
+              class="anal-cell-tools"
+              style="
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                display: flex;
+                gap: 6px;
+                z-index: 100;
+              "
+            >
+              <button
+                class="anal-cell-import tab-btn btn-sm"
+                title="Importer une image"
+              >
+                Importer
+              </button>
+              <button
+                class="anal-cell-clear tab-btn btn-sm danger"
+                title="Vider la case"
+              >
+                Vider
+              </button>
+            </div>
+            <div
+              class="anal-cell-drop"
+              style="
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 16px;
+                color: #777;
+                pointer-events: none;
+              "
+            >
+              Glisser un fragment ici, <br />
+              coller une image (Ctrl/Cmd+V) ou cliquer “Importer”.
+            </div>
+            <div
+              class="anal-cell-content"
+              style="
+                position: absolute;
+                inset: 0;
+                padding: 12px;
+                overflow: auto;
+              "
+            ></div>
+          </div>
+
+          <!-- cellule 3 -->
+          <div
+            class="anal-cell"
+            data-slot="2"
+            style="
+              position: relative;
+              border: 1px dashed #bbb;
+              border-radius: 10px;
+              padding: 10px;
+              background: #fafafa;
+              min-height: 250px;
+              overflow: hidden;
+            "
+          >
+            <div
+              class="anal-cell-tools"
+              style="
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                display: flex;
+                gap: 6px;
+                z-index: 100;
+              "
+            >
+              <button
+                class="anal-cell-import tab-btn btn-sm"
+                title="Importer une image"
+              >
+                Importer
+              </button>
+              <button
+                class="anal-cell-clear tab-btn btn-sm danger"
+                title="Vider la case"
+              >
+                Vider
+              </button>
+            </div>
+            <div
+              class="anal-cell-drop"
+              style="
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 16px;
+                color: #777;
+                pointer-events: none;
+              "
+            >
+              Glisser un fragment ici, <br />
+              coller une image (Ctrl/Cmd+V) ou cliquer “Importer”.
+            </div>
+            <div
+              class="anal-cell-content"
+              style="
+                position: absolute;
+                inset: 0;
+                padding: 12px;
+                overflow: auto;
+              "
+            ></div>
+          </div>
+
+          <!-- cellule 4 -->
+          <div
+            class="anal-cell"
+            data-slot="3"
+            style="
+              position: relative;
+              border: 1px dashed #bbb;
+              border-radius: 10px;
+              padding: 10px;
+              background: #fafafa;
+              min-height: 250px;
+              overflow: hidden;
+            "
+          >
+            <div
+              class="anal-cell-tools"
+              style="
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                display: flex;
+                gap: 6px;
+                z-index: 100;
+              "
+            >
+              <button
+                class="anal-cell-import tab-btn btn-sm"
+                title="Importer une image"
+              >
+                Importer
+              </button>
+              <button
+                class="anal-cell-clear tab-btn btn-sm danger"
+                title="Vider la case"
+              >
+                Vider
+              </button>
+            </div>
+            <div
+              class="anal-cell-drop"
+              style="
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 16px;
+                color: #777;
+                pointer-events: none;
+              "
+            >
+              Glisser un fragment ici, <br />
+              coller une image (Ctrl/Cmd+V) ou cliquer “Importer”.
+            </div>
+            <div
+              class="anal-cell-content"
+              style="
+                position: absolute;
+                inset: 0;
+                padding: 12px;
+                overflow: auto;
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
 <!-- (nouveau) Vue "Unité de projet" : vide pour l’instant -->
 <div id="unit-view" class="view" style="display:none;"></div>
 
@@ -272,7 +700,44 @@
   </div>
 </div>
 
+<!-- Modale : Analogies enregistrées (localStorage) -->
+    <div id="anal-saved-modal" class="modal" style="display: none">
+      <div class="modal__backdrop"></div>
+      <div
+        class="modal__dialog"
+        style="
+          width: min(900px, 92vw);
+          height: min(80vh, 92vh);
+          background: #111;
+          border: 1px solid #333;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <div class="modal__head">
+          <strong>Analogies enregistrées (local)</strong>
+          <div class="modal__actions">
+            <button id="anal-saved-close" class="tab-btn btn-sm danger">
+              Fermer
+            </button>
+          </div>
+        </div>
+        <div
+          id="anal-saved-body"
+          class="modal__body"
+          style="padding: 10px; overflow: auto"
+        ></div>
+      </div>
+    </div>
 
+    <!-- Input fichier caché (utilisé par les boutons "Importer" des 4 cases) -->
+    <input
+      id="anal-file-input"
+      type="file"
+      accept="image/*"
+      style="display: none"
+    />
 
 <script defer src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script defer src="https://d3js.org/d3.v7.min.js"></script>
